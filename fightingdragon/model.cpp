@@ -191,7 +191,7 @@ HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 	if (nTex == 9)
 	{
 		//XÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-		D3DXLoadMeshFromX("data\\MODEL\\shoulder_l.x",
+		D3DXLoadMeshFromX("data\\MODEL\\shoulder_r.x",
 			D3DXMESH_SYSTEMMEM,
 			pDevice,
 			NULL,
