@@ -207,13 +207,13 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 	{*/
 		//ÉÇÉfÉãê∂ê¨
 		m_apModel[0] = CModel::Create(D3DXVECTOR3(0.0f, 38.0f, 0.0f), fRot, 0, fWidth, fHeight);
-		m_apModel[1] = CModel::Create(D3DXVECTOR3(0.0f, -1.0f, 0.0f), fRot, 1, fWidth, fHeight);
+		m_apModel[1] = CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), fRot, 1, fWidth, fHeight);
 		m_apModel[2] = CModel::Create(D3DXVECTOR3(0.0f, 18.0f, 0.0f), fRot, 2, fWidth, fHeight);
-		m_apModel[3] = CModel::Create(D3DXVECTOR3(4.0f, -10.0f, 0.0f), fRot, 3, fWidth, fHeight);
-		m_apModel[4] = CModel::Create(D3DXVECTOR3(0.3f, -10.0f, 0.0f), fRot, 4, fWidth, fHeight);
+		m_apModel[3] = CModel::Create(D3DXVECTOR3(2.0f, -9.0f, -0.9f), fRot, 3, fWidth, fHeight);
+		m_apModel[4] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 4, fWidth, fHeight);
 		m_apModel[5] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 5, fWidth, fHeight);
-		m_apModel[6] = CModel::Create(D3DXVECTOR3(-4.0f, -10.0f, 0.0f), fRot, 6, fWidth, fHeight);
-		m_apModel[7] = CModel::Create(D3DXVECTOR3(0.3f, -10.0f, 1.0f), fRot, 7, fWidth, fHeight);
+		m_apModel[6] = CModel::Create(D3DXVECTOR3(-2.0f, -9.0f, -0.9f), fRot, 6, fWidth, fHeight);
+		m_apModel[7] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 7, fWidth, fHeight);
 		m_apModel[8] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 8, fWidth, fHeight);
 		m_apModel[9] = CModel::Create(D3DXVECTOR3(5.0f, 15.0f, -1.0f), fRot, 9, fWidth, fHeight);
 		m_apModel[10] = CModel::Create(D3DXVECTOR3(5.0f, 0.0f, 0.0f), fRot, 10, fWidth, fHeight);
