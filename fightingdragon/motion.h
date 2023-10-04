@@ -22,7 +22,7 @@ public:
 	{
 		MOTIONTYPE_NEUTRAL = 0, //待機
 		MOTIONTYPE_MOVE,		//移動
-		MOTIONTYPE_AIM,		//アクション
+		MOTIONTYPE_PUNCH,		//アクション
 		MOTIONTYPE_JUMP,		//ジャンプ
 		MOTIONTYPE_LANDING,		//着地
 		MOTIONTYPE_MAX,

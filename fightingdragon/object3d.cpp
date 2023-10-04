@@ -31,7 +31,7 @@ CObject3d::CObject3d()
 
 	m_TimeBlinking = 0;
 
-	m_bShowEnemy = false;
+	//m_bShowEnemy = true;
 }
 
 //========================
@@ -105,7 +105,7 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	m_rot.y = fRot; //向きを初期化
 	m_rot.z = fRot; //向きを初期化
 
-	m_bShowEnemy = false;
+	/*m_bShowEnemy = true;*/
 
 	m_objectcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -169,7 +169,7 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	//色をセットする
 	SetColor(m_objectcol);
 
-	SetShowEnemy(m_bShowEnemy);
+	//SetShowEnemy(m_bShowEnemy);
 
 	return S_OK;
 }
@@ -200,9 +200,9 @@ void CObject3d::Update(void)
 		
 			m_TimeBlinking--;
 
-			m_bShowEnemy = false;
+			/*m_bShowEnemy = false;
 
-			SetShowEnemy(m_bShowEnemy);
+			SetShowEnemy(m_bShowEnemy);*/
 
 			//一定時間で発光する
 			if (m_TimeBlinking == 50)
@@ -223,9 +223,9 @@ void CObject3d::Update(void)
 				//徐々に薄くする
 				m_objectcol.a -= 0.02f;
 
-				m_bShowEnemy = true;
+			/*	m_bShowEnemy = true;
 
-				SetShowEnemy(m_bShowEnemy);
+				SetShowEnemy(m_bShowEnemy);*/
 			}
 			else
 			{//それ以外は見えなくする
@@ -347,22 +347,22 @@ void CObject3d::SetColor(D3DXCOLOR col)
 	m_objectcol = col;
 }
 
-//===================================
-//敵の姿を映すかを渡す処理
-//===================================
-bool CObject3d::GetShowEnemy(void)
-{
-	return m_bShowEnemy;
-}
-
-//===================================
-//色をセットする処理
-//===================================
-void CObject3d::SetShowEnemy(bool ShowEnemy)
-{
-	m_bShowEnemy = ShowEnemy;
-}
-
-
-
-
+////===================================
+////敵の姿を映すかを渡す処理
+////===================================
+//bool CObject3d::GetShowEnemy(void)
+//{
+//	return m_bShowEnemy;
+//}
+//
+////===================================
+////色をセットする処理
+////===================================
+//void CObject3d::SetShowEnemy(bool ShowEnemy)
+//{
+//	m_bShowEnemy = ShowEnemy;
+//}
+//
+//
+//
+//

@@ -110,6 +110,7 @@ public:
 
 	void HitBlock(bool bJump);
 	bool HitEnemy(bool bDeath);
+	bool HitPlayer(bool bDeath);
 
 	void SetDeath(bool bDeath);
 	bool GetDeath(void);

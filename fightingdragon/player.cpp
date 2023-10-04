@@ -198,7 +198,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 		}
 	}
 
-	SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	/*SetRot(D3DXVECTOR3(0.0f,0.0f,0.0f));*/
 
 	//全てのパーツ数を初期化
 	m_nNumModel = MAX_PART;
@@ -249,10 +249,10 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 	//	m_apModel[17] = CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), fRot, 17, fWidth, fHeight);
 	//}
 
-	for (int nCnt = 0; nCnt < MAX_PART; nCnt++)
-	{
-		m_InitPartPos[nCnt] = m_apModel[nCnt]->GetPos();
-	}
+		for (int nCnt = 0; nCnt < MAX_PART; nCnt++)
+		{
+			m_InitPartPos[nCnt] = m_apModel[nCnt]->GetPos();
+		}
 
 	//親モデルの設定(全パーツ分)
 	m_apModel[0]->SetParent(NULL);
@@ -456,28 +456,10 @@ void CPlayer::Update(void)
 
 				m_bRot = false;
 
-				if (m_bAim == false)
+				if (m_nType != MOTIONTYPE_MOVE)
 				{
-					if (m_nType != MOTIONTYPE_MOVE)
-					{
-						SetMotionPlayer(MOTIONTYPE_MOVE);
-					}
+					SetMotionPlayer(MOTIONTYPE_MOVE);
 				}
-
-				else if (m_bAim == true)
-				{
-					if (m_nType != MOTIONTYPE_AIM)
-					{
-						SetMotionPlayer(MOTIONTYPE_AIM);
-					}
-				}
-
-				/*m_pMotion->Set(1);
-
-				m_pMotion->Update();*/
-
-				/*move.y += cosf(D3DX_PI * 0.5f) * 1.0f;*/
-
 			}
 
 			else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
@@ -488,27 +470,10 @@ void CPlayer::Update(void)
 
 				m_bRot = true;
 
-				if (m_bAim == false)
-				{
 					if (m_nType != MOTIONTYPE_MOVE)
 					{
 						SetMotionPlayer(MOTIONTYPE_MOVE);
 					}
-				}
-
-				else if (m_bAim == true)
-				{
-					if (m_nType != MOTIONTYPE_AIM)
-					{
-						SetMotionPlayer(MOTIONTYPE_AIM);
-					}
-				}
-
-				/*	m_pMotion->Set(1);
-
-					m_pMotion->Update();*/
-
-					/*move.y += cosf(D3DX_PI * 0.5f) * 1.0f;*/
 			}
 			else
 			{
@@ -517,34 +482,6 @@ void CPlayer::Update(void)
 					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
 				}
 			}
-
-			////if (pInputKeyboard->GetPless(DIK_S) == true)
-			////{//Aキーが押された
-
-			////	move.z += sinf(-D3DX_PI * 0.5f) * 1.0f;
-
-			////	rot.y = D3DX_PI * 0.5f;
-
-			////	m_pMotion->Set(1);
-
-			////	m_pMotion->Update();
-
-			////	/*move.y += cosf(D3DX_PI * 0.5f) * 1.0f;*/
-
-			////}
-
-			////if (pInputKeyboard->GetPless(DIK_W) == true)
-			////{//Dキーが押された
-			////	move.z += sinf(D3DX_PI * 0.5f) * 1.0f;
-
-			////	rot.y = D3DX_PI * -0.5f;
-
-			////	m_pMotion->Set(1);
-
-			////	m_pMotion->Update();
-
-			////	/*move.y += cosf(D3DX_PI * 0.5f) * 1.0f;*/
-			////}
 
 			if (pos.y > 2000.0f)
 			{
@@ -556,46 +493,6 @@ void CPlayer::Update(void)
 			{
 				pos.y = 0.0f;
 				move.y = 1.0f;
-			}
-
-			//打つ処理
-			if (pInputKeyboard->GetPless(DIK_Z) == true || pInputGamepad->GetPless(pInputGamepad->BUTTON_RB, 0) == true)
-			{
-				move.x = 0;
-
-				SetPlayerAim(true);
-
-
-				//打つ処理
-				if (pInputKeyboard->GetTrigger(DIK_SPACE) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
-				{
-					/*CBullet::Create(D3DXVECTOR3(pos.x, pos.y + 40.0f, 0.0f), m_ShotRot, 0, 10.0f, 10.0f);*/
-
-					CSound::PlaySound(CSound::SOUND_LABEL_SE_GUNFIRE);
-				}
-
-			}
-			else
-			{
-				SetPlayerAim(false);
-			}
-
-			//if (pInputKeyboard->GetPless(DIK_M) == true)
-			//{
-			//	pScore->Add(1);
-			//}
-
-			//ジャンプ処理
-			if (pInputKeyboard->GetTrigger(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
-			{
-				if (m_bJump == false)
-				{
-					m_bJump = true;
-
-					SetJump(m_bJump);
-
-					move.y += PLAYER_JUNP;
-				}
 			}
 		}
 
@@ -652,8 +549,10 @@ void CPlayer::Update(void)
 		//プレイヤーの死亡判定
 		if (m_bDeath == false && m_PlayerState == PLAYER_NONE)
 		{
+			HitEnemy(m_bDeath);
+
 			//敵との当たり判定
-			m_bDeath = HitEnemy(m_bDeath);
+			m_bDeath = HitPlayer(m_bDeath);
 		}
 
 		SetJump(m_bJump);
@@ -812,6 +711,37 @@ void CPlayer::Update(void)
 			RotDiff.z = m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[nCntModel].m_fRotZ
 				- m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotZ;
 
+			//向きの正規化
+			//目標の向きXが３.１４を超えたら
+			if (RotDiff.x > D3DX_PI)
+			{
+				RotDiff.x -= D3DX_PI * 2;
+			}
+			else if (RotDiff.x < -D3DX_PI)
+			{//目標の向きXが-３.１４を超えたら
+				RotDiff.x += D3DX_PI * 2;
+			}
+
+			//目標の向きYが３.１４を超えたら
+			if (RotDiff.y > D3DX_PI)
+			{
+				RotDiff.y -= D3DX_PI * 2;
+			}
+			else if (RotDiff.y < -D3DX_PI)
+			{//目標の向きYが-３.１４を超えたら
+				RotDiff.y += D3DX_PI * 2;
+			}
+
+			//目標の向きZが３.１４を超えたら
+			if (RotDiff.z > D3DX_PI)
+			{
+				RotDiff.z -= D3DX_PI * 2;
+			}
+			else if (RotDiff.z < -D3DX_PI)
+			{//目標の向きZが-３.１４を超えたら
+				RotDiff.z += D3DX_PI * 2;
+			}
+
 			////パーツの位置や差分を計算する
 			//m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[nCntModel].m_fPosX = (float)m_nKey + PosDiff.x * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
 			//m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[nCntModel].m_fPosY = (float)m_nKey + PosDiff.y * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
@@ -823,12 +753,48 @@ void CPlayer::Update(void)
 			m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame = 60;
 
 			//パーツの位置や差分を計算する
-			MotionPos.x = m_InitPartPos[nCntModel].x + m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosX + PosDiff.x * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
-			MotionPos.y = m_InitPartPos[nCntModel].y + m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosY + PosDiff.y * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
-			MotionPos.z = m_InitPartPos[nCntModel].z + m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosZ + PosDiff.z * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
-			MotionRot.x = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotX + RotDiff.x * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
-			MotionRot.y = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotY + RotDiff.y * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
-			MotionRot.z = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotZ + RotDiff.z * (m_nCounter / m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
+			MotionPos.x = m_InitPartPos[nCntModel].x;/* + m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosX + PosDiff.x * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);*/
+			MotionPos.y = m_InitPartPos[nCntModel].y;/* + m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosY + PosDiff.y * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);*/
+			MotionPos.z = m_InitPartPos[nCntModel].z; /*+ m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fPosZ + PosDiff.z * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);*/
+			MotionRot.x = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotX + RotDiff.x * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
+			MotionRot.y = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotY + RotDiff.y * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
+			MotionRot.z = m_aInfo[m_nType].aKeyinfo[m_nKey].aKey[nCntModel].m_fRotZ + RotDiff.z * ((float)m_nCounter / (float)m_aInfo[m_nType].aKeyinfo[m_nKey].nFrame);
+
+			//デバッグ表示の情報を渡す
+			CDebugProc *pDebug = CManager::GetDebugProck();
+
+			pDebug->Print("目標の向き : %f", m_aInfo[0].aKeyinfo[nNextKey].aKey[1].m_fRotZ);
+
+			//向きの正規化
+			//目標の向きXが３.１４を超えたら
+			if (MotionRot.x > D3DX_PI)
+			{
+				MotionRot.x -= D3DX_PI * 2;
+			}
+			else if (MotionRot.x < -D3DX_PI)
+			{//目標の向きXが-３.１４を超えたら
+				MotionRot.x += D3DX_PI * 2;
+			}
+
+			//目標の向きYが３.１４を超えたら
+			if (MotionRot.y > D3DX_PI)
+			{
+				MotionRot.y -= D3DX_PI * 2;
+			}
+			else if (MotionRot.y < -D3DX_PI)
+			{//目標の向きYが-３.１４を超えたら
+				MotionRot.y += D3DX_PI * 2;
+			}
+
+			//目標の向きZが３.１４を超えたら
+			if (MotionRot.z > D3DX_PI)
+			{
+				MotionRot.z -= D3DX_PI * 2;
+			}
+			else if (MotionRot.z < -D3DX_PI)
+			{//目標の向きZが-３.１４を超えたら
+				MotionRot.z += D3DX_PI * 2;
+			}
 
 			////パーツの位置・向きを設定
 			//m_apModel[nCntModel]->SetPos(D3DXVECTOR3(m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[nCntModel].m_fPosX,
@@ -852,8 +818,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 					//ふたつ目のパーツ(体)
@@ -861,8 +827,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 					//みっつ目のパーツ(頭)
@@ -871,7 +837,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 					//よっつ目のパーツ(左肩)
@@ -879,16 +845,16 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.4f;
 
 					//いつつ目のパーツ(左腕)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.5f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
@@ -905,15 +871,15 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -930,25 +896,25 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 1.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.1f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -0.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = -0.8f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -964,23 +930,23 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -1.2f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.7f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.5f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -1.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
@@ -998,8 +964,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 					//ふたつ目のパーツ(体)
@@ -1007,8 +973,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 					//みっつ目のパーツ(頭)
@@ -1017,7 +983,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 					//よっつ目のパーツ(左肩)
@@ -1025,16 +991,16 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.4f;
 
 					//いつつ目のパーツ(左腕)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.6f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
@@ -1051,15 +1017,15 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.6f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -1068,7 +1034,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.2f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosX = 0.0f;
@@ -1076,25 +1042,25 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 1.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.1f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -0.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = -0.8f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -1110,23 +1076,23 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -1.2f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.7f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.5f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -1.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
@@ -1145,8 +1111,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 					//ふたつ目のパーツ(体)
@@ -1154,8 +1120,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 					//みっつ目のパーツ(頭)
@@ -1164,7 +1130,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 					//よっつ目のパーツ(左肩)
@@ -1172,16 +1138,16 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.4f;
 
 					//いつつ目のパーツ(左腕)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.5f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
@@ -1198,15 +1164,15 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -1223,25 +1189,25 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 1.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.1f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -0.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = -0.8f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -1257,23 +1223,23 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -1.2f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.7f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.5f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -1.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
@@ -1291,8 +1257,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 					//ふたつ目のパーツ(体)
@@ -1300,8 +1266,8 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 					//みっつ目のパーツ(頭)
@@ -1310,7 +1276,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 					//よっつ目のパーツ(左肩)
@@ -1318,16 +1284,16 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.1f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.4f;
 
 					//いつつ目のパーツ(左腕)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotX = -0.6f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fRotZ = 0.0f;
 
@@ -1344,15 +1310,15 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.5f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.6f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -1361,7 +1327,7 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotY = 0.2f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[8].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosX = 0.0f;
@@ -1369,25 +1335,25 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 1.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotY = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[9].m_fRotZ = -0.7f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.1f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = -0.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotY = 1.6f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[10].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fPosZ = 0.0f;
 
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = -0.8f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotX = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotY = 0.8f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[11].m_fRotZ = 0.0f;
 
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[12].m_fPosX = 0.0f;
@@ -1403,23 +1369,23 @@ void CPlayer::Update(void)
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -1.2f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.7f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.5f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = -0.2f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.3f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = 0.0f;
+					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -1.8f;
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 					m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
@@ -2643,7 +2609,7 @@ case MOTIONTYPE_MOVE:
 		if (m_nFrameCnt > 60)
 		{
 			m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
-
+			m_nCounter = 0;
 			m_nFrameCnt = 0;
 		}
 		
@@ -2918,6 +2884,14 @@ void CPlayer::HitBlock(bool bJump)
 //==============================
 bool CPlayer::HitEnemy(bool bDeath)
 {
+	CInputKeyboard *pInputKeyboard;
+	CInputGamePad *pInputGamepad;
+
+	//キーボードの取得
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	pInputGamepad = CManager::GetGamePad();
+
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
 		CObject *pObj = NULL;
@@ -2943,44 +2917,131 @@ bool CPlayer::HitEnemy(bool bDeath)
 
 				pObjectx = dynamic_cast<CObjectx*>(pObj);
 
-				if (GetPosition().x + 5.0f >= pObjectx->GetPosition().x - 0.0f
-					&& GetPosition().x - 5.0f <= pObjectx->GetPosition().x + 0.0f
+				if (GetPosition().x + 30.0f >= pObjectx->GetPosition().x - 15.0f
+					&& GetPosition().x - 30.0f <= pObjectx->GetPosition().x + 15.0f
 					&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
 					&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
 					&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
 					&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
 				{
-					//パーティクルの生成
-					CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y , 1, 10.0f, 10.0f);
-
-					CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-					CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
-
-					if (m_nLife <= 0)
+					if (pInputKeyboard->GetTrigger(DIK_P) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 					{
-						//死んだことにする
-						bDeath = true;
+						CEnemy *pEnemy = CGame::GetEnemy();
 
-						//死亡情報をセットする
-						SetDeath(bDeath);
+						//パーティクルの生成
+						CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						return true;
-					}
-					else
-					{
-						AddDamage(1);
+						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
 
-						D3DXVECTOR3 move = GetMove();
-
-						move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
-
-						SetMove(move);
-
-						if (m_nType != MOTIONTYPE_NEUTRAL)
+						if (m_nLife <= 0)
 						{
-							SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+							//死んだことにする
+							bDeath = true;
+
+							//死亡情報をセットする
+							pEnemy->AddDamage(10,0);
+
+							return true;
+						}
+						else
+						{
+							pEnemy->AddDamage(1, 0);
+
+							D3DXVECTOR3 move = GetMove();
+
+							/*move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
+
+							SetMove(move);*/
+
+							if (m_nType != MOTIONTYPE_NEUTRAL)
+							{
+								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+							}
 						}
 					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+//==============================
+//敵の当たり判定(3D)
+//==============================
+bool CPlayer::HitPlayer(bool bDeath)
+{
+	CInputKeyboard *pInputKeyboard;
+	CInputGamePad *pInputGamepad;
+
+	//キーボードの取得
+	pInputKeyboard = CManager::GetInputKeyboard();
+
+	pInputGamepad = CManager::GetGamePad();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		CObject *pObj = NULL;
+
+		CObjectx *pObjectx = NULL;
+
+		//オブジェクトを取得
+		pObj = GetObject(nCnt);
+
+		//NULLチェック
+		if (pObj != NULL)
+		{
+			TYPE type;
+
+			//種類を取得
+			type = pObj->GetType();
+
+			////位置取得
+			//D3DXVECTOR3 posBlock = pObj->GetPosition();
+
+			if (type == TYPE_ENEMY)
+			{
+
+				pObjectx = dynamic_cast<CObjectx*>(pObj);
+
+				if (GetPosition().x + 10.0f >= pObjectx->GetPosition().x - 0.0f
+					&& GetPosition().x - 10.0f <= pObjectx->GetPosition().x + 0.0f
+					&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
+					&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
+					&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
+					&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
+				{
+						//パーティクルの生成
+						CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
+
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
+
+						if (m_nLife <= 0)
+						{
+							//死んだことにする
+							bDeath = true;
+
+							SetDeath(bDeath);
+
+							return true;
+						}
+						else
+						{
+							AddDamage(1);
+
+							D3DXVECTOR3 move = GetMove();
+
+							move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
+
+							SetMove(move);
+
+							if (m_nType != MOTIONTYPE_NEUTRAL)
+							{
+								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+							}
+						}
 				}
 			}
 		}

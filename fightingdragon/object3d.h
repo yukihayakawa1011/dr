@@ -32,8 +32,8 @@ public:
 	D3DXCOLOR GetColor(void);
 	void SetColor(D3DXCOLOR col);
 
-	bool GetShowEnemy(void);
-	void SetShowEnemy(bool ShowEnemy);
+	/*bool GetShowEnemy(void);
+	void SetShowEnemy(bool ShowEnemy);*/
 
 private:
 	static LPDIRECT3DTEXTURE9 m_pTexture;				//テクスチャ情報

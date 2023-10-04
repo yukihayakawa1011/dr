@@ -799,22 +799,22 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	//	return -1;
 	//}
 
-	//if (m_pEnemy == NULL)
-	//{//ìGÇÃê∂ê¨
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 40.0f), 50.0f, 0, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(30.0f, 105.0f, 40.0f), 50.0f, 1, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(80.0f, 305.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(-2000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1800.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//	m_pEnemy = CEnemy::Create(D3DXVECTOR3(2000.0, 500.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-	//}
-	//else
-	//{
-	//	return -1;
-	//}
+	if (m_pEnemy == NULL)
+	{//ìGÇÃê∂ê¨
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+		/*m_pEnemy = CEnemy::Create(D3DXVECTOR3(30.0f, 105.0f, 40.0f), 50.0f, 1, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(80.0f, 305.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-2000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1800.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(2000.0, 500.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);*/
+	}
+	else
+	{
+		return -1;
+	}
 
 
 	//NULLÉ`ÉFÉbÉN

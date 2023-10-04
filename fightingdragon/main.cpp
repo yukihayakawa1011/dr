@@ -11,7 +11,7 @@
 
 //マクロ定義
 #define CLASS_NAME    "WindowClass"        //ウインドウクラスの名前
-#define WINDOW_NAME   "タイトル未定" //ウインドウの名前（キャプションに表示）
+#define WINDOW_NAME   "ファイティングドラゴン" //ウインドウの名前（キャプションに表示）
 
 
 
@@ -208,7 +208,7 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			{
 				return 0;   //0を返さないと終了してしまう
 			}
-
+			
 			break;
 		}
 		break;

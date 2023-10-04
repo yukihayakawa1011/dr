@@ -228,8 +228,8 @@ void CEnemy::Update(void)
 	//if()
 
 	//オブジェクト3dのデータをもらう
-	CObject3d *pobject3d = CGame::GetObject3d();
-	bool bShowenemy = pobject3d->GetShowEnemy();
+	/*CObject3d *pobject3d = CGame::GetObject3d();
+	bool bShowenemy = pobject3d->GetShowEnemy();*/
 
 	D3DXVECTOR3 pos = GetPosition();
 
@@ -243,9 +243,9 @@ void CEnemy::Update(void)
 
 	if (pos.z <= 0.0f)
 	{//敵の位置(Z)が0だったら
-		bShowenemy = true;
+		/*bShowenemy = true;
 
-		pobject3d->SetShowEnemy(bShowenemy);
+		pobject3d->SetShowEnemy(bShowenemy);*/
 
 		m_Enemystate = ENEMYSTATE_ATTACK;
 
@@ -301,9 +301,9 @@ void CEnemy::Update(void)
 			&&m_pPlayer->GetPosition().x + 10.0f >= pos.x
 			&& m_pPlayer->GetPosition().y + 5.0f >= pos.y)
 		{
-			bShowenemy = false;
+			/*bShowenemy = false;*/
 
-			pobject3d->SetShowEnemy(bShowenemy);
+		/*	pobject3d->SetShowEnemy(bShowenemy);*/
 
 			move.z = -8.0f;
 
@@ -332,9 +332,9 @@ void CEnemy::Update(void)
 			&&m_pPlayer->GetPosition().x - 10.0f >= pos.x - 200.0f
 			&& m_pPlayer->GetPosition().y + 5.0f >= pos.y)
 		{
-			bShowenemy = false;
+			/*bShowenemy = false;*/
 
-			pobject3d->SetShowEnemy(bShowenemy);
+			/*pobject3d->SetShowEnemy(bShowenemy);*/
 
 			move.z = -8.0f;
 
@@ -361,19 +361,19 @@ void CEnemy::Update(void)
 		}
 	}
 
-	if (bShowenemy == false)
+	/*if (bShowenemy == false)
 	{
 		m_Enemystate = ENEMYSTATE_NONE;
 
 		SetState(m_Enemystate);
-	}
+	}*/
 
-	if (bShowenemy == true && pos.z > 0.0f)
+	/*if (bShowenemy == true && pos.z > 0.0f)
 	{
 		m_Enemystate = ENEMYSTATE_STANBY;
 
 		SetState(m_Enemystate);
-	}
+	}*/
 
 	SetRot(rot);
 

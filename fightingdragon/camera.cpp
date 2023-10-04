@@ -99,8 +99,8 @@ void CCamera::Update(void)
 
 	D3DXVECTOR3 pos = pPlayer->GetPosition();
 
-	m_posV = D3DXVECTOR3(pos.x + 30.0f, pos.y + 30.0f, -200.0f); //視点
-	m_posR = D3DXVECTOR3(pos.x + 30.0f, pos.y + 30.0f, pos.z);     //注視点
+	m_posV = D3DXVECTOR3(pos.x - 40.0f, pos.y + 30.0f, -200.0f); //視点
+	m_posR = D3DXVECTOR3(pos.x - 40.0f, pos.y + 30.0f, pos.z);     //注視点
 	m_vecU = D3DXVECTOR3(0.0f, 1.0f, 0.0f);		   //上方向ベクトル
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);			   //向き
 
