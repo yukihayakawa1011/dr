@@ -28,8 +28,8 @@ CModel::CModel()
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				//位置をクリア
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);				//傾きをクリア
-														//m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);				//色をクリア
-														//m_nLife = 0;
+
+	m_Type = MODELTYPE_PLAYER;							//モデルのタイプをクリア
 }
 
 //============================
@@ -43,7 +43,7 @@ CModel::~CModel()
 //============================
 //生成処理
 //============================
-CModel *CModel::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
+CModel *CModel::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight, int nType)
 {
 	CModel *pModel;
 
@@ -51,7 +51,7 @@ CModel *CModel::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, floa
 	pModel = NEW_DBG CModel;
 
 	//初期化処理
-	pModel->Init(D3DXVECTOR3(pos.x, pos.y, pos.z), fRot, nTex, fWidth, fHeight);
+	pModel->Init(D3DXVECTOR3(pos.x, pos.y, pos.z), fRot, nTex, fWidth, fHeight,nType);
 
 	return pModel;
 }
@@ -59,7 +59,7 @@ CModel *CModel::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, floa
 //====================
 //モデルの初期化
 //====================
-HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
+HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight, int nType)
 {
 	//デバイスの取得
 	CRenderer *pRenderer = CManager::GetRenderer();
@@ -71,225 +71,245 @@ HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 
 	int nNumVtx;  //頂点数
 
-	if (nTex == 0)
+	if (nType == 0)
 	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\hip.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[0].m_pBuffMat,
-			NULL,
-			&pModels[0].m_dwNumMat,
-			&pModels[0].m_pMesh);
+		m_Type = MODELTYPE_PLAYER;
+	}
+	if (nType == 1)
+	{
+		m_Type = MODELTYPE_ENEMY0;
+	}
+	if (nType == 2)
+	{
+		m_Type = MODELTYPE_ENEMY1;
+	}
+	if (nType == 3)
+	{
+		m_Type = MODELTYPE_ENEMY2;
 	}
 
-	if (nTex == 1)
+	if (m_Type == MODELTYPE_PLAYER)
 	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\body.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[1].m_pBuffMat,
-			NULL,  
-			&pModels[1].m_dwNumMat,
-			&pModels[1].m_pMesh);
-	}
+		if (nTex == 0)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\hip.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[0].m_pBuffMat,
+				NULL,
+				&pModels[0].m_dwNumMat,
+				&pModels[0].m_pMesh);
+		}
 
-	if (nTex == 2)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\head.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[2].m_pBuffMat,
-			NULL,
-			&pModels[2].m_dwNumMat,
-			&pModels[2].m_pMesh);
-	}
+		if (nTex == 1)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\body.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[1].m_pBuffMat,
+				NULL,
+				&pModels[1].m_dwNumMat,
+				&pModels[1].m_pMesh);
+		}
 
-	if (nTex == 3)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\tigh_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[3].m_pBuffMat,
-			NULL,
-			&pModels[3].m_dwNumMat,
-			&pModels[3].m_pMesh);
-	}
+		if (nTex == 2)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\head.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[2].m_pBuffMat,
+				NULL,
+				&pModels[2].m_dwNumMat,
+				&pModels[2].m_pMesh);
+		}
 
-	if (nTex == 4)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\leg_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[4].m_pBuffMat,
-			NULL, 
-			&pModels[4].m_dwNumMat,
-			&pModels[4].m_pMesh);
-	}
+		if (nTex == 3)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\tigh_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[3].m_pBuffMat,
+				NULL,
+				&pModels[3].m_dwNumMat,
+				&pModels[3].m_pMesh);
+		}
 
-	if (nTex == 5)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\shuuze_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[5].m_pBuffMat,
-			NULL, 
-			&pModels[5].m_dwNumMat,
-			&pModels[5].m_pMesh);
-	}
+		if (nTex == 4)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\leg_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[4].m_pBuffMat,
+				NULL,
+				&pModels[4].m_dwNumMat,
+				&pModels[4].m_pMesh);
+		}
 
-	if (nTex == 6)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\tigh_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[6].m_pBuffMat,
-			NULL, 
-			&pModels[6].m_dwNumMat,
-			&pModels[6].m_pMesh);
-	}
+		if (nTex == 5)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\shuuze_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[5].m_pBuffMat,
+				NULL,
+				&pModels[5].m_dwNumMat,
+				&pModels[5].m_pMesh);
+		}
 
-	if (nTex == 7)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\leg_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[7].m_pBuffMat,
-			NULL,  
-			&pModels[7].m_dwNumMat,
-			&pModels[7].m_pMesh);
-	}
+		if (nTex == 6)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\tigh_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[6].m_pBuffMat,
+				NULL,
+				&pModels[6].m_dwNumMat,
+				&pModels[6].m_pMesh);
+		}
 
-	if (nTex == 8)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\shuuze_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[8].m_pBuffMat,
-			NULL, 
-			&pModels[8].m_dwNumMat,
-			&pModels[8].m_pMesh);
-	}
+		if (nTex == 7)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\leg_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[7].m_pBuffMat,
+				NULL,
+				&pModels[7].m_dwNumMat,
+				&pModels[7].m_pMesh);
+		}
 
-	if (nTex == 9)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\shoulder_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[9].m_pBuffMat,
-			NULL,  
-			&pModels[9].m_dwNumMat,
-			&pModels[9].m_pMesh);
-	}
+		if (nTex == 8)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\shuuze_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[8].m_pBuffMat,
+				NULL,
+				&pModels[8].m_dwNumMat,
+				&pModels[8].m_pMesh);
+		}
 
-	if (nTex == 10)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\arm_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[10].m_pBuffMat,
-			NULL, 
-			&pModels[10].m_dwNumMat,
-			&pModels[10].m_pMesh);
-	}
+		if (nTex == 9)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\shoulder_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[9].m_pBuffMat,
+				NULL,
+				&pModels[9].m_dwNumMat,
+				&pModels[9].m_pMesh);
+		}
 
-	if (nTex == 11)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\arm2_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[11].m_pBuffMat,
-			NULL,  
-			&pModels[11].m_dwNumMat,
-			&pModels[11].m_pMesh);
-	}
+		if (nTex == 10)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\arm_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[10].m_pBuffMat,
+				NULL,
+				&pModels[10].m_dwNumMat,
+				&pModels[10].m_pMesh);
+		}
 
-	if (nTex == 12)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\hand_l.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[12].m_pBuffMat,
-			NULL, 
-			&pModels[12].m_dwNumMat,
-			&pModels[12].m_pMesh);
-	}
+		if (nTex == 11)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\arm2_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[11].m_pBuffMat,
+				NULL,
+				&pModels[11].m_dwNumMat,
+				&pModels[11].m_pMesh);
+		}
 
-	if (nTex == 13)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\shoulder_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[13].m_pBuffMat,
-			NULL,
-			&pModels[13].m_dwNumMat,
-			&pModels[13].m_pMesh);
-	}
+		if (nTex == 12)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\hand_l.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[12].m_pBuffMat,
+				NULL,
+				&pModels[12].m_dwNumMat,
+				&pModels[12].m_pMesh);
+		}
 
-	if (nTex == 14)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\arm_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[14].m_pBuffMat,
-			NULL,
-			&pModels[14].m_dwNumMat,
-			&pModels[14].m_pMesh);
-	}
+		if (nTex == 13)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\shoulder_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[13].m_pBuffMat,
+				NULL,
+				&pModels[13].m_dwNumMat,
+				&pModels[13].m_pMesh);
+		}
 
-	if (nTex == 15)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\arm2_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[15].m_pBuffMat,
-			NULL,
-			&pModels[15].m_dwNumMat,
-			&pModels[15].m_pMesh);
-	}
+		if (nTex == 14)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\arm_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[14].m_pBuffMat,
+				NULL,
+				&pModels[14].m_dwNumMat,
+				&pModels[14].m_pMesh);
+		}
 
-	if (nTex == 16)
-	{
-		//Xファイルの読み込み
-		D3DXLoadMeshFromX("data\\MODEL\\hand_r.x",
-			D3DXMESH_SYSTEMMEM,
-			pDevice,
-			NULL,
-			&pModels[16].m_pBuffMat,
-			NULL,
-			&pModels[16].m_dwNumMat,
-			&pModels[16].m_pMesh);
+		if (nTex == 15)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\arm2_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[15].m_pBuffMat,
+				NULL,
+				&pModels[15].m_dwNumMat,
+				&pModels[15].m_pMesh);
+		}
+
+		if (nTex == 16)
+		{
+			//Xファイルの読み込み
+			D3DXLoadMeshFromX("data\\MODEL\\hand_r.x",
+				D3DXMESH_SYSTEMMEM,
+				pDevice,
+				NULL,
+				&pModels[16].m_pBuffMat,
+				NULL,
+				&pModels[16].m_dwNumMat,
+				&pModels[16].m_pMesh);
+		}
 	}
 
 	D3DXMATERIAL *pMat; //マテリアルへのポインタ
@@ -694,6 +714,14 @@ void CModel::SetVtxMin(D3DXVECTOR3 VtxMin)
 void CModel::SetBuffMat(LPD3DXBUFFER Mat)
 {
 	Model.m_pBuffMat = Mat;
+}
+
+//============================
+//モデルタイプ情報セットする
+//============================
+void CModel::SetModelType(MODELTYPE type)
+{
+	m_Type = type;
 }
 
 //============================

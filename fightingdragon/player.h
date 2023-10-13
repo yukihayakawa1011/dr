@@ -49,6 +49,7 @@ public:
 		PLAYER_NONE = 0,		//通常状態
 		PLAYER_DAMAGE,			//ダメージ状態
 		PLAYER_INVINCIBLE,		//無敵状態
+		PLAYER_GURD,			//プレイヤーガード状態
 		PLAYER_MAX
 	}PLAYER_STATE;
 

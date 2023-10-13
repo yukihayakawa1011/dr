@@ -213,23 +213,23 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 	/*if (m_player_mode[nTex] == PLAYER_PLAYER)
 	{*/
 		//モデル生成
-		m_apModel[0] = CModel::Create(D3DXVECTOR3(0.0f, 32.0f, 0.0f), fRot, 0, fWidth, fHeight);
-		m_apModel[1] = CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), fRot, 1, fWidth, fHeight);
-		m_apModel[2] = CModel::Create(D3DXVECTOR3(0.0f, 18.0f, 0.0f), fRot, 2, fWidth, fHeight);
-		m_apModel[3] = CModel::Create(D3DXVECTOR3(2.0f, -9.0f, -0.9f), fRot, 3, fWidth, fHeight);
-		m_apModel[4] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 4, fWidth, fHeight);
-		m_apModel[5] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 5, fWidth, fHeight);
-		m_apModel[6] = CModel::Create(D3DXVECTOR3(-2.0f, -9.0f, -0.9f), fRot, 6, fWidth, fHeight);
-		m_apModel[7] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 7, fWidth, fHeight);
-		m_apModel[8] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 8, fWidth, fHeight);
-		m_apModel[9] = CModel::Create(D3DXVECTOR3(5.0f, 15.0f, -1.0f), fRot, 9, fWidth, fHeight);
-		m_apModel[10] = CModel::Create(D3DXVECTOR3(5.0f, 0.0f, 0.0f), fRot, 10, fWidth, fHeight);
-		m_apModel[11] = CModel::Create(D3DXVECTOR3(5.7f, 0.0f, 0.0f), fRot, 11, fWidth, fHeight);
-		m_apModel[12] = CModel::Create(D3DXVECTOR3(6.0f, 0.0f, 0.0f), fRot, 12, fWidth, fHeight);
-		m_apModel[13] = CModel::Create(D3DXVECTOR3(-5.0f, 15.0f, -1.0f), fRot, 13, fWidth, fHeight);
-		m_apModel[14] = CModel::Create(D3DXVECTOR3(-5.0f, 0.0f, 0.5f), fRot, 14, fWidth, fHeight);
-		m_apModel[15] = CModel::Create(D3DXVECTOR3(-5.7f, 0.0f, -0.5f), fRot, 15, fWidth, fHeight);
-		m_apModel[16] = CModel::Create(D3DXVECTOR3(-6.0f, 0.0f, 0.0f), fRot, 16, fWidth, fHeight);
+		m_apModel[0] = CModel::Create(D3DXVECTOR3(0.0f, 32.0f, 0.0f), fRot, 0, fWidth, fHeight,0);
+		m_apModel[1] = CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), fRot, 1, fWidth, fHeight, 0);
+		m_apModel[2] = CModel::Create(D3DXVECTOR3(0.0f, 18.0f, 0.0f), fRot, 2, fWidth, fHeight, 0);
+		m_apModel[3] = CModel::Create(D3DXVECTOR3(2.0f, -9.0f, -0.9f), fRot, 3, fWidth, fHeight, 0);
+		m_apModel[4] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 4, fWidth, fHeight, 0);
+		m_apModel[5] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 5, fWidth, fHeight, 0);
+		m_apModel[6] = CModel::Create(D3DXVECTOR3(-2.0f, -9.0f, -0.9f), fRot, 6, fWidth, fHeight, 0);
+		m_apModel[7] = CModel::Create(D3DXVECTOR3(0.3f, -12.0f, 0.0f), fRot, 7, fWidth, fHeight,0);
+		m_apModel[8] = CModel::Create(D3DXVECTOR3(0.0f, -15.0f, 0.0f), fRot, 8, fWidth, fHeight,0);
+		m_apModel[9] = CModel::Create(D3DXVECTOR3(5.0f, 15.0f, -1.0f), fRot, 9, fWidth, fHeight,0);
+		m_apModel[10] = CModel::Create(D3DXVECTOR3(5.0f, 0.0f, 0.0f), fRot, 10, fWidth, fHeight,0);
+		m_apModel[11] = CModel::Create(D3DXVECTOR3(5.7f, 0.0f, 0.0f), fRot, 11, fWidth, fHeight,0);
+		m_apModel[12] = CModel::Create(D3DXVECTOR3(6.0f, 0.0f, 0.0f), fRot, 12, fWidth, fHeight,0);
+		m_apModel[13] = CModel::Create(D3DXVECTOR3(-5.0f, 15.0f, -1.0f), fRot, 13, fWidth, fHeight, 0);
+		m_apModel[14] = CModel::Create(D3DXVECTOR3(-5.0f, 0.0f, 0.5f), fRot, 14, fWidth, fHeight, 0);
+		m_apModel[15] = CModel::Create(D3DXVECTOR3(-5.7f, 0.0f, -0.5f), fRot, 15, fWidth, fHeight, 0);
+		m_apModel[16] = CModel::Create(D3DXVECTOR3(-6.0f, 0.0f, 0.0f), fRot, 16, fWidth, fHeight, 0);
 		/*m_apModel[17] = CModel::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), fRot, 17, fWidth, fHeight);*/
 	//}
 
@@ -452,39 +452,43 @@ void CPlayer::Update(void)
 
 		int nState = 0;
 		m_PlayerState = GetState();
-		if (m_bDeath == false && m_PlayerState == PLAYER_NONE)
+		if (m_bDeath == false)
 		{
-			if (pInputKeyboard->GetPless(DIK_A) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
-			{//Aキーが押された
-
-				move.x = -1.0f;
-
-				m_bRot = false;
-
-				if (m_nType != MOTIONTYPE_MOVE)
+			if(m_PlayerState == PLAYER_NONE || m_PlayerState == PLAYER_GURD)
+			{ 
+				if (m_PlayerState != PLAYER_GURD)
 				{
-					SetMotionPlayer(MOTIONTYPE_MOVE);
-				}
-			}
+					if (pInputKeyboard->GetPless(DIK_A) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) <= -1)
+					{//Aキーが押された
 
-			else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
-			{//Dキーが押された
-				move.x = 1.0f;
+						move.x = -1.0f;
 
-				m_bRot = true;
+						m_bRot = false;
 
-				if (m_nType != MOTIONTYPE_MOVE)
-				{
-					SetMotionPlayer(MOTIONTYPE_MOVE);
-				}
-			}
+						if (m_nType != MOTIONTYPE_MOVE)
+						{
+							SetMotionPlayer(MOTIONTYPE_MOVE);
+						}
+					}
 
-				//プレイヤーの死亡判定
-				else if (pInputKeyboard->GetTrigger(DIK_P) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
-				{
-					/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
+					else if (pInputKeyboard->GetPless(DIK_D) == true || pInputGamepad->GetGameStickL_X_Press(pInputGamepad->BUTTON_STICK_LX, 0) >= 1)
+					{//Dキーが押された
+						move.x = 1.0f;
+
+						m_bRot = true;
+
+						if (m_nType != MOTIONTYPE_MOVE)
+						{
+							SetMotionPlayer(MOTIONTYPE_MOVE);
+						}
+					}
+
+					//プレイヤーのパンチをしたかどうか
+					else if (pInputKeyboard->GetTrigger(DIK_P) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 					{
-						nPunchSpeed--;*/
+						/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
+						{
+							nPunchSpeed--;*/
 
 						if (m_nType != MOTIONTYPE_PUNCH0)
 						{
@@ -498,8 +502,14 @@ void CPlayer::Update(void)
 						{
 							nPunchSpeed = PLAYER_PUNCH_SPEED;
 						}*/
-					/*}*/
+						/*}*/
+					}
+					else
+					{
+						m_bAttack = false;
+					}
 				}
+
 				else if (m_bAttack == false)
 				{
 					if (m_nType != MOTIONTYPE_NEUTRAL)
@@ -508,6 +518,15 @@ void CPlayer::Update(void)
 					}
 				}
 		
+			//ガード処理
+			if (pInputKeyboard->GetPless(DIK_G) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_X, 0) == true)
+			{
+				m_PlayerState = PLAYER_GURD;
+			}
+			else
+			{
+				m_PlayerState = PLAYER_NONE;
+			}
 
 			if (pos.y > 2000.0f)
 			{
@@ -572,8 +591,11 @@ void CPlayer::Update(void)
 
 		SetJump(m_bJump);
 
-		//敵との当たり判定
-		m_bDeath = HitPlayer(m_bDeath);
+		if (m_PlayerState != PLAYER_GURD)
+		{
+			//敵との当たり判定
+			m_bDeath = HitPlayer(m_bDeath);
+		}
 
 		//床の判定
 		if (pos.y <= 1.0f)
@@ -3099,6 +3121,11 @@ case MOTIONTYPE_MOVE:
 				m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 				m_nCounter = 0;
 				m_nFrameCnt = 0;
+
+				if (m_nKey == 4)
+				{
+					SetMotionPlayer(MOTIONTYPE_NEUTRAL);
+				}
 			}
 
 			break;
@@ -3107,6 +3134,7 @@ case MOTIONTYPE_MOVE:
 		//m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 
 		/*m_nKey = (m_nKey + 1) % m_nKey;*/
+		}
 
 	}
 }
@@ -3188,14 +3216,18 @@ void CPlayer::Draw(void)
 			case PLAYER_INVINCIBLE:
 				m_stateCol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.4f);
 				break;
+
+			case PLAYER_GURD:
+				m_stateCol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+				break;
 			}
 
-			if (m_PlayerState == PLAYER_NONE)
+			if (m_PlayerState == PLAYER_NONE || m_PlayerState == PLAYER_GURD)
 			{
 				//モデル(パーツ)の描画
 				m_apModel[nCntMat]->Draw();
 			}
-			if (m_PlayerState != PLAYER_NONE)
+			else
 			{
 				//モデル(パーツ)の描画
 				m_apModel[nCntMat]->DrawCol(m_stateCol);

@@ -16,6 +16,15 @@ class CModel
 {
 public:
 
+	typedef enum
+	{
+		MODELTYPE_PLAYER = 0,		//プレイヤーのモデル
+		MODELTYPE_ENEMY0,			//ザコ敵のモデル
+		MODELTYPE_ENEMY1,			//中ボスのモデル
+		MODELTYPE_ENEMY2,			//ボスのモデル
+		MODELTYPE_MAX
+	}MODELTYPE;
+
 	typedef struct 
 	{
 		LPD3DXMESH m_pMesh;										//メッシュ
@@ -31,8 +40,8 @@ public:
 	CModel();
 	~CModel();
 
-	static CModel *Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight);
-	HRESULT Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight);
+	static CModel *Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight,int nType);
+	HRESULT Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight, int nType);
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
@@ -47,6 +56,7 @@ public:
 	void SetVtxMax(D3DXVECTOR3 VtxMax);
 	void SetVtxMin(D3DXVECTOR3 VtxMin);
 	void SetBuffMat(LPD3DXBUFFER Mat);
+	void SetModelType(MODELTYPE type);
 
 	D3DXVECTOR3 GetPos(void);
 	D3DXVECTOR3 GetMove(void);
@@ -71,6 +81,8 @@ private:
 	static SET_MODEL pModels[MAX_PART];		//モデルの情報
 
 	int m_nIdx;								//何番目のパーツ
+
+	MODELTYPE m_Type;
 };
 
 
