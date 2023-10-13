@@ -33,6 +33,8 @@
 #define PLAYER_MIN_Z (0.0f)			//プレイヤーのZ軸の下
 #define PLAYER_MAX_Z (15.0f)		//プレイヤーのZ軸の下
 
+#define PLAYER_PUNCH_SPEED (50)		//プレイヤーのパンチ間隔
+
 class CPlayer : public CObjectx
 {
 public:
@@ -55,7 +57,7 @@ public:
 	{
 		MOTIONTYPE_NEUTRAL = 0, //待機
 		MOTIONTYPE_MOVE,		//移動
-		MOTIONTYPE_AIM,		//アクション
+		MOTIONTYPE_PUNCH0,		//パンチ
 		MOTIONTYPE_JUMP,		//ジャンプ
 		MOTIONTYPE_LANDING,		//着地
 		MOTIONTYPE_MAX,
@@ -109,7 +111,7 @@ public:
 	bool GetJump(void);
 
 	void HitBlock(bool bJump);
-	bool HitEnemy(bool bDeath);
+	bool HitEnemyPunch0(bool bDeath);
 	bool HitPlayer(bool bDeath);
 
 	void SetDeath(bool bDeath);
@@ -183,7 +185,11 @@ private:
 
 	int m_nFrameCnt;			//フレーム数えるよう
 
+	bool m_bAttack;				//攻撃状態に入っているかどうか
+
 	D3DXVECTOR3 m_InitPartPos[MAX_PART];	//パーツの初期位置
+
+	int nPunchSpeed;
 };
 
 #endif

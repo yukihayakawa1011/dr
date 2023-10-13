@@ -133,7 +133,7 @@ HRESULT CBlock::Init(D3DXVECTOR3 pos, float fRot, int nTex,float fWidth, float f
 //============================
 void CBlock::Uninit(void)
 {
-	Release();
+	CObjectx::Uninit();
 }
 //============================
 //ƒ|ƒŠƒSƒ“‚ÌXV

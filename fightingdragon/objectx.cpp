@@ -24,6 +24,9 @@ CObjectx::CObjectx()
 
 	//m_col = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);				//色をクリア
 	m_nLife = 0;
+
+	m_nTexCnt = 0;		//テクスチャ情報の番号をクリア
+
 }
 
 //============================
@@ -212,6 +215,8 @@ HRESULT CObjectx::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, floa
 	//何番目かのオブジェクト化を知らせる
 	m_Objectx = Objectx[nTex];
 
+	m_nTexCnt = nTex;
+
 	return S_OK;
 }
 
@@ -220,6 +225,16 @@ void CObjectx::Uninit(void)
 {
 	for (int nCnt = 0; nCnt < MAX_OBJECTX; nCnt++)
 	{
+		for (int nCntMat = 0; nCntMat < (int)Objectx[m_nTexCnt].m_dwNumMat; nCntMat++)
+		{
+			//テクスチャの破棄
+			if (Objectx[nCnt].m_apTexture[nCntMat] != NULL)
+			{
+				Objectx[nCnt].m_apTexture[nCntMat]->Release();
+				Objectx[nCnt].m_apTexture[nCntMat] = NULL;
+			}
+		}
+
 		//メッシュの破棄
 		if (Objectx[nCnt].m_pMesh != NULL)
 		{	  		
@@ -234,7 +249,6 @@ void CObjectx::Uninit(void)
 			Objectx[nCnt].m_pBuffMat = NULL;
 		}
 	}
-
 	CObject::Release();
 }
 

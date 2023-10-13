@@ -16,20 +16,21 @@
 #include "mode.h"
 #include "player.h"
 
-//静的メンバ変数宣言
-int CEnemy::m_nLife[MAX_ENEMY] = {};
-
 //============================
 //コンストラクタ
 //============================
 CEnemy::CEnemy()
 {
-	m_Enemystate = ENEMYSTATE_STANBY;
+	m_Enemystate = ENEMYSTATE_STANBY;					//敵のステートをクリアする
 	nCntEnemy = 0;										//何番目の敵か知る
 
-	m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+	m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);		//敵の色をクリアする
 
-	m_nCntState = 0;
+	m_nCntState = 0;									//敵の数をクリアする
+
+	memset(&m_nLife[0], NULL, sizeof(int));				//敵のライフをクリアする
+
+	m_bDeath = false;									//敵が死亡したかどうかをクリアする
 }
 
 CEnemy::CEnemy(D3DXVECTOR3 pos)
@@ -124,6 +125,13 @@ HRESULT CEnemy::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 
 		m_nCntState = 60;
 
+		m_bDeath = false;
+
+		for (int nCnt = 0; nCnt < MAX_ENEMY; nCnt++)
+		{
+			m_nLife[nCnt] = 5;
+		}
+
 	//全てのパーツ数を初期化
 	m_nNumModel = MAX_MODEL;
 
@@ -196,10 +204,12 @@ HRESULT CEnemy::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 	D3DXVECTOR3 move = GetMove();
 
 	//移動量の初期化
-	move.x = 3.0f;
+	move.x = 0.0f;
 
 	//移動量のセット
 	SetMove(move);
+
+	SetDeath(m_bDeath,nTex);
 
 	return S_OK;
 }
@@ -472,42 +482,45 @@ void CEnemy::Draw(void)
 		//ワールドマトリックスの設定
 		pDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-		for (int nCntMat = 0; nCntMat < m_nNumModel; nCntMat++)
+		if (m_bDeath == false)
 		{
-			if (m_Enemystate == ENEMYSTATE_STANBY)
+			for (int nCntMat = 0; nCntMat < m_nNumModel; nCntMat++)
 			{
-				m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
+				if (m_Enemystate == ENEMYSTATE_STANBY)
+				{
+					m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 
-				//モデル(パーツ)の描画
-				m_apModel[nCntMat]->DrawCol(m_ColEnemy);
+					//モデル(パーツ)の描画
+					m_apModel[nCntMat]->DrawCol(m_ColEnemy);
+				}
+				if (m_Enemystate == ENEMYSTATE_ATTACK)
+				{
+					//モデル(パーツ)の描画
+					m_apModel[nCntMat]->Draw();
+				}
+				if (m_Enemystate == ENEMYSTATE_DAMAGE)
+				{
+					m_ColEnemy = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+
+					//モデル(パーツ)の描画
+					m_apModel[nCntMat]->DrawCol(m_ColEnemy);
+				}
+
+				if (m_Enemystate == ENEMYSTATE_NONE)
+				{
+					m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+
+					//モデル(パーツ)の描画
+					m_apModel[nCntMat]->DrawCol(m_ColEnemy);
+				}
+
+				////現在のマテリアルを取得
+				//pDevice->GetMaterial(&matDef);
+
+				////マテリアルデータへのポインタを取得
+				//pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+
 			}
-			if (m_Enemystate == ENEMYSTATE_ATTACK)
-			{
-				//モデル(パーツ)の描画
-				m_apModel[nCntMat]->Draw();
-			}
-			if (m_Enemystate == ENEMYSTATE_DAMAGE)
-			{
-				m_ColEnemy = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-
-				//モデル(パーツ)の描画
-				m_apModel[nCntMat]->DrawCol(m_ColEnemy);
-			}
-
-			if (m_Enemystate == ENEMYSTATE_NONE)
-			{
-				m_ColEnemy = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
-
-				//モデル(パーツ)の描画
-				m_apModel[nCntMat]->DrawCol(m_ColEnemy);
-			}
-
-			////現在のマテリアルを取得
-			//pDevice->GetMaterial(&matDef);
-
-			////マテリアルデータへのポインタを取得
-			//pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
 		}
 		/*保存していたマテリアルを戻す
 		pDevice->SetMaterial(&matDef);*/
@@ -804,6 +817,22 @@ void CEnemy::SetJump(bool jump)
 bool CEnemy::GetJump(void)
 {
 	return m_bJump;
+}
+
+//============================
+//死亡してるかどうかの取得
+//============================
+bool CEnemy::GetDeath(void)
+{
+	return m_bDeath;
+}
+
+//============================
+//死亡してるかどうかをセットする
+//============================
+void CEnemy::SetDeath(bool bDeath,int nEnemy)
+{
+	m_bDeath = bDeath;
 }
 
 ////======================

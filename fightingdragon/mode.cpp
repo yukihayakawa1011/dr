@@ -222,7 +222,7 @@ void CTitle::Update(void)
 
 	
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 		
 		CManager::SetMode(MODE_STORY);
@@ -439,7 +439,7 @@ void CStory::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 		CManager::SetMode(MODE_TUTORIAL);
 
@@ -654,7 +654,7 @@ void CTutorial::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 		CManager::SetMode(MODE_GAME);
 
@@ -767,7 +767,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							//CExplosion::Load();		//爆発テクスチャロード
 
-							//CBlock::Load();			//ブロックテクスチャロード
+							CBlock::Load();			//ブロックテクスチャロード
 
 							//CEnemy::Load();			//敵テクスチャロード
 
@@ -802,9 +802,9 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (m_pEnemy == NULL)
 	{//敵の生成
 		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
-		/*m_pEnemy = CEnemy::Create(D3DXVECTOR3(30.0f, 105.0f, 40.0f), 50.0f, 1, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(80.0f, 305.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
+	/*	m_pEnemy = CEnemy::Create(D3DXVECTOR3(30.0f, 105.0f, 40.0f), 50.0f, 1, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(80.0f, 305.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);*/
+		/*m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
 		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-2000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
 		m_pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
 		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
@@ -826,6 +826,12 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	else
 	{
 		return -1;
+	}
+
+	if (m_pScore == NULL)
+	{
+		//スコアの生成
+		m_pScore = CScore::Create(D3DXVECTOR3(300.0f, 700.0f, 0.0f), 0.0f, 0);
 	}
 
 	//NULLチェック
@@ -856,7 +862,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	{
 		return -1;
 	}
-	//CBilboard::Create(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), 0.0f, 0, 200.0f, 200.0f);
+	////CBilboard::Create(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), 0.0f, 0, 200.0f, 200.0f);
 
 	//カメラの生成
 	if (m_pCamera == NULL)
@@ -919,17 +925,17 @@ void CGame::Uninit(void)
 	//エフェクトのテクスチャ破棄
 	CEffect::Unload();
 
-	//////敵のテクスチャ破棄
-	////CEnemy::Unload();
+	//敵のテクスチャ破棄
+	CEnemy::Unload();
 
 	////爆発のテクスチャ破棄
 	//CExplosion::Unload();
 
-	//////プレイヤーのテクスチャ破棄
-	////CPlayer::Unload();
+	////プレイヤーのテクスチャ破棄
+	//CPlayer::Unload();
 
-	////ブロックのテクスチャ破棄
-	//CBlock::Unload();
+	//ブロックのテクスチャ破棄
+	CBlock::Unload();
 
 	//オブジェクト3dテクスチャ破棄
 	CObject3d::Unload();
@@ -977,7 +983,7 @@ void CGame::Update(void)
 		//キーボードの取得
 		pInputKeyboard = CManager::GetInputKeyboard();
 
-		D3DXVECTOR3 pos = m_pPlayer->GetPosition();
+		/*D3DXVECTOR3 pos = m_pPlayer->GetPosition();
 
 		if (pos.x >= 564.0f && pos.y >= 1400.0f)
 		{
@@ -989,7 +995,14 @@ void CGame::Update(void)
 		if (bDeath == true)
 		{
 			CManager::SetMode(MODE_GAMEOVER);
-		}
+		}*/
+	}
+
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	{
+		CManager::SetMode(MODE_RESULT);
+
+		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
 }
 
@@ -1178,7 +1191,7 @@ void CResult::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 		CManager::SetMode(MODE_TITLE);
 
@@ -1387,7 +1400,7 @@ void CGameOver::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 	CManager::SetMode(MODE_TITLE);
 	}

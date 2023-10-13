@@ -64,11 +64,14 @@ public:
 	void SetJump(bool jump);
 	bool GetJump(void);
 
+	bool GetDeath(void);
+	void SetDeath(bool bDeath,int nEnemy);
+
 	//CEnemy GetPos(void);
 	//void SetPos(D3DXVECTOR3 pos);
 
 private:
-	static int m_nLife[MAX_ENEMY];											//体力	
+	int m_nLife[MAX_ENEMY];											//体力	
 	D3DXVECTOR3 m_posold;						//古い位置
 	D3DXMATRIX m_mtxWorld;						//ワールドマトリックス
 	CModel *m_apModel[MAX_PART];				//モデルパーツへのポインタ
@@ -88,6 +91,8 @@ private:
 	int nCntEnemy;										//何番目の敵か知る
 
 	int m_nCntState;		//プレイヤー状態カウント
+
+	bool m_bDeath;			//敵が死亡したかどうか判定
 };
 
 

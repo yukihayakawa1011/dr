@@ -66,6 +66,8 @@ private:
 	SET_OBJECTX m_Objectx;		//モデルの情報
 
 	static SET_OBJECTX Objectx[MAX_OBJECTX];		//モデルの情報
+
+	int m_nTexCnt;		//テクスチャ情報の番号
 	
 };
 
