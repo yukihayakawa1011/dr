@@ -70,7 +70,6 @@ private:
 	//シーンに関する情報
 	MODE m_Mode;
 	int m_nMode;
-	static CScene *m_pScene;					//シーンに関するポインタ
 	D3DXVECTOR3 m_pos;							//位置情報
 };
 
@@ -85,25 +84,31 @@ public:
 	void Update(void);
 	void Draw(void);
 	
-	static CRenderer *GetRenderer(void);
-	static CInputKeyboard *GetInputKeyboard(void);
-	static CSound *GetSound(void);
-	static CDebugProc *GetDebugProck(void);
-	static CInputGamePad *GetGamePad(void);
+	static CManager *GetInstance();	
+	static void Release(void);
+
+	CRenderer *GetRenderer(void);
+	CInputKeyboard *GetInputKeyboard(void);
+	CSound *GetSound(void);
+	CDebugProc *GetDebugProck(void);
+	CInputGamePad *GetGamePad(void);
 
 	//シーンに関する関数
-	static void SetMode(CScene::MODE mode);
+	void SetMode(CScene::MODE mode);
 
 private:
 
-	static CRenderer *m_pRenderer;				//レンダラーの情報
-	static CInputKeyboard *m_pInputKeyboard;	//キーボードの情報
-	static CSound *m_pSound;					//サウンド情報
-	static CDebugProc *m_pDebugProc;			//デバッグ情報
-	static CInputGamePad *m_pInputGamePad;		//ゲームパッド情報
+	//シングルトン化
+	static CManager *pManager;
+
+	CRenderer *m_pRenderer;				//レンダラーの情報
+	CInputKeyboard *m_pInputKeyboard;	//キーボードの情報
+	CSound *m_pSound;					//サウンド情報
+	CDebugProc *m_pDebugProc;			//デバッグ情報
+	CInputGamePad *m_pInputGamePad;		//ゲームパッド情報
 
 	//シーンに関する情報
-	static CScene *m_pScene;					//シーンに関するポインタ
+	CScene *m_pScene;					//シーンに関するポインタ
 };
 
 #endif

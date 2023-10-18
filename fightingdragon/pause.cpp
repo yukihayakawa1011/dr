@@ -63,7 +63,7 @@ CPause *CPause::Create(void)
 void CPause::InitPause(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 	int nCntPause;
 
@@ -205,13 +205,13 @@ void CPause::UpdatePause(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	VERTEX_2D *pVtx;    //頂点情報へのポインタ
@@ -382,7 +382,7 @@ void CPause::DrawPause(void)
 	int nCntPause;
 
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//頂点バッファをデータストリームに設定

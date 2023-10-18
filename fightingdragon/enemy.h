@@ -29,12 +29,54 @@ public:
 
 	typedef enum 
 	{
-		ENEMYSTATE_STANBY = 0,
+		ENEMYSTATE_NONE = 0,
 		ENEMYSTATE_ATTACK,
 		ENEMYSTATE_DAMAGE,
-		ENEMYSTATE_NONE,
+		ENEMYSTATE_GURD,
 		ENEMYSTATE_MAX
 	}EnemyState;
+
+	//モーションの種類
+	typedef enum
+	{
+		MOTIONTYPE_NEUTRAL = 0, //待機
+		MOTIONTYPE_MOVE,		//移動
+		MOTIONTYPE_PUNCH,		//パンチ
+		MOTIONTYPE_KICK,		//キック
+		MOTIONTYPE_MAX,
+	}MOTIONTYPE;
+
+	//キーの構造体
+	typedef struct
+	{
+		float m_fPosX;		//位置X
+		float m_fPosY;		//位置Y
+		float m_fPosZ;		//位置Z
+		float m_fRotX;		//向きX
+		float m_fRotY;		//向きY
+		float m_fRotZ;		//向きZ
+							//float m_frotDestX;  //目標の向きX
+							//float m_frotDestY;  //目標の向きY
+							//float m_frotDestZ;  //目標の向きZ
+							//float m_fposDestX;  //目標の向きX
+							//float m_fposDestY;  //目標の向きY
+							//float m_fposDestZ;  //目標の向きZ
+	}KEY;
+
+	// キー情報の構造体
+	typedef struct
+	{
+		int nFrame;				//再生フレーム
+		KEY aKey[MAX_PART];	//各モデルのキー要素
+	}KEY_INFO;
+
+	//モーション情報の構造体
+	typedef struct
+	{
+		bool bLoop;				//ループするかどうか
+		int nNumKey;			//キーの総数
+		KEY_INFO aKeyinfo[4];	//キー情報
+	}INFO;
 
 	CEnemy();
 	CEnemy(D3DXVECTOR3 pos);
@@ -67,18 +109,26 @@ public:
 	bool GetDeath(void);
 	void SetDeath(bool bDeath,int nEnemy);
 
+	int GetCnt(void);
+	void SetCnt(int nCnt);
+
+	//モーション
+	void SetMotionEnemy(MOTIONTYPE nType);
+
 	//CEnemy GetPos(void);
 	//void SetPos(D3DXVECTOR3 pos);
 
 private:
 	int m_nLife[MAX_ENEMY];											//体力	
+	int m_EnemyCount;							//敵の数を数える
+	int m_nEnemy;								//敵の総数
+	bool m_bJump;								//ジャンプ中かどうか
+	bool m_bDeath;			//敵が死亡したかどうか判定
+	
 	D3DXVECTOR3 m_posold;						//古い位置
 	D3DXMATRIX m_mtxWorld;						//ワールドマトリックス
 	CModel *m_apModel[MAX_PART];				//モデルパーツへのポインタ
 	int m_nNumModel;							//モデルパーツの総数
-	int m_EnemyCount;							//敵の数を数える
-	int m_nEnemy;								//敵の総数
-	bool m_bJump;								//ジャンプ中かどうか
 
 	//CMotion *m_pMotion;							//モーションの情報
 
@@ -88,11 +138,21 @@ private:
 
 	D3DXCOLOR m_ColEnemy;						//敵の色
 
-	int nCntEnemy;										//何番目の敵か知る
-
 	int m_nCntState;		//プレイヤー状態カウント
 
-	bool m_bDeath;			//敵が死亡したかどうか判定
+	int m_nCnt;										//何番目の敵か知る
+
+	D3DXVECTOR3 m_InitPartPos[MAX_PART];	//パーツの初期位置
+	bool m_bAttack;				//攻撃状態に入っているかどうか
+	INFO m_aInfo[MAX_PART];		//パーツの最大数
+
+	int m_nNumAll;				//数の最大数
+	int m_nType;				//種類
+	bool bLoop;					//終了するかどうか
+	int m_nKey;					//キーの数
+	int m_nCounter;				//モーションカウンター
+	bool m_bFinish;				//終了するかどうか
+	int m_nFrameCnt;			//フレーム数えるよう
 };
 
 

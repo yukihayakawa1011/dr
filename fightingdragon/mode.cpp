@@ -86,7 +86,7 @@ CTitle *CTitle::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CTitle::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
@@ -215,17 +215,17 @@ void CTitle::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 	
 
-	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
 		
-		CManager::SetMode(MODE_STORY);
+		CManager::GetInstance()->SetMode(MODE_STORY);
 			
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_TITLEENTER);
 
@@ -249,7 +249,7 @@ void CTitle::Update(void)
 void CTitle::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
@@ -305,7 +305,7 @@ CStory *CStory::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CStory::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
@@ -434,14 +434,14 @@ void CStory::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
-		CManager::SetMode(MODE_TUTORIAL);
+		CManager::GetInstance()->SetMode(MODE_TUTORIAL);
 
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
@@ -464,7 +464,7 @@ void CStory::Update(void)
 void CStory::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
@@ -520,7 +520,7 @@ CTutorial *CTutorial::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CTutorial::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
@@ -649,14 +649,14 @@ void CTutorial::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
-		CManager::SetMode(MODE_GAME);
+		CManager::GetInstance()->SetMode(MODE_GAME);
 
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
@@ -679,7 +679,7 @@ void CTutorial::Update(void)
 void CTutorial::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
@@ -789,27 +789,19 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 							/*InitShadow();*/
 
 
-	//if (m_pObject3d == NULL)
-	//{
-	//	////オブジェクト3Dの生成
-	//	m_pObject3d = CObject3d::Create(D3DXVECTOR3(0.0f, 0.0f, 38.0f), 0.0f, 0, 3500.0f, 2000.0f);
-	//}
-	//else
-	//{
-	//	return -1;
-	//}
+	if (m_pObject3d == NULL)
+	{
+		////オブジェクト3Dの生成
+		m_pObject3d = CObject3d::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0);
+	}
+	else
+	{
+		return -1;
+	}
 
 	if (m_pEnemy == NULL)
 	{//敵の生成
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
-	/*	m_pEnemy = CEnemy::Create(D3DXVECTOR3(30.0f, 105.0f, 40.0f), 50.0f, 1, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(80.0f, 305.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);*/
-		/*m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-2000.0f, 0.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(300.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1000.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-1800.0f, 1410.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(2000.0, 500.0f, 40.0f), 50.0f, 2, 50.0f, 50.0f);*/
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
 	}
 	else
 	{
@@ -828,40 +820,11 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 		return -1;
 	}
 
-	if (m_pScore == NULL)
-	{
-		//スコアの生成
-		m_pScore = CScore::Create(D3DXVECTOR3(300.0f, 700.0f, 0.0f), 0.0f, 0);
-	}
-
-	//NULLチェック
-	if (m_pBlock == NULL)
-	{
-		////障害物ブロックの生成
-
-		////床ブロックの生成(1階)
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-2800.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-2400.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-2000.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-1600.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-1200.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-800.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-400.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(0.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(400.0f, -6.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-
-		//床ブロックの生成(2階)
-		m_pBlock = CBlock::Create(D3DXVECTOR3(400.0f, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-120, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-650.0f, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-1300.0f, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-1850.0f, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-		m_pBlock = CBlock::Create(D3DXVECTOR3(-2750.0f, 100.0f, 0.0f), 0.0f, 2, 50.0f, 50.0f);
-	}
-	else
-	{
-		return -1;
-	}
+	//if (m_pScore == NULL)
+	//{
+	//	//スコアの生成
+	//	m_pScore = CScore::Create(D3DXVECTOR3(300.0f, 700.0f, 0.0f), 0.0f, 0);
+	//}
 	////CBilboard::Create(D3DXVECTOR3(-400.0f, 0.0f, 0.0f), 0.0f, 0, 200.0f, 200.0f);
 
 	//カメラの生成
@@ -954,10 +917,10 @@ void CGame::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 	/*if (pInputKeyboard->GetTrigger(DIK_P) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
@@ -981,26 +944,26 @@ void CGame::Update(void)
 		CInputKeyboard *pInputKeyboard;
 
 		//キーボードの取得
-		pInputKeyboard = CManager::GetInputKeyboard();
+		pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-		/*D3DXVECTOR3 pos = m_pPlayer->GetPosition();
+		D3DXVECTOR3 pos = m_pPlayer->GetPosition();
 
-		if (pos.x >= 564.0f && pos.y >= 1400.0f)
+		if (pos.x <= -300.0f)
 		{
-			CManager::SetMode(MODE_RESULT);
+			CManager::GetInstance()->SetMode(MODE_RESULT);
 		}
 
 		bool bDeath = m_pPlayer->GetDeath();
 
 		if (bDeath == true)
 		{
-			CManager::SetMode(MODE_GAMEOVER);
-		}*/
+			CManager::GetInstance()->SetMode(MODE_GAMEOVER);
+		}
 	}
 
 	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
-		CManager::SetMode(MODE_RESULT);
+		CManager::GetInstance()->SetMode(MODE_RESULT);
 
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
@@ -1057,7 +1020,7 @@ CResult *CResult::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CResult::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
@@ -1186,14 +1149,14 @@ void CResult::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
-		CManager::SetMode(MODE_TITLE);
+		CManager::GetInstance()->SetMode(MODE_TITLE);
 
 		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
@@ -1205,7 +1168,7 @@ void CResult::Update(void)
 void CResult::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
@@ -1261,7 +1224,7 @@ CGameOver *CGameOver::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CGameOver::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
@@ -1395,14 +1358,14 @@ void CGameOver::Update(void)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 	//ゲームパッドの取得
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetPless(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 	{
-	CManager::SetMode(MODE_TITLE);
+		CManager::GetInstance()->SetMode(MODE_TITLE);
 	}
 }
 
@@ -1412,7 +1375,7 @@ void CGameOver::Update(void)
 void CGameOver::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 

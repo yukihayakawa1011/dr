@@ -59,7 +59,7 @@ CObjectx *CObjectx::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, 
 HRESULT CObjectx::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	int nNumVtx;  //頂点数
@@ -262,7 +262,7 @@ void CObjectx::Update(void)
 void CObjectx::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス

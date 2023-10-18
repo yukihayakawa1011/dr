@@ -113,6 +113,7 @@ public:
 
 	void HitBlock(bool bJump);
 	bool HitEnemyPunch0(bool bDeath);
+	bool HitEnemyKick0(bool bDeath);
 	bool HitPlayer(bool bDeath);
 
 	void SetDeath(bool bDeath);
@@ -191,6 +192,10 @@ private:
 	D3DXVECTOR3 m_InitPartPos[MAX_PART];	//パーツの初期位置
 
 	int nPunchSpeed;
+
+	int m_nEnemy;					//何番めの敵か知る
+
+	bool m_bSpawn;					//スポーンしたかどうか
 };
 
 #endif

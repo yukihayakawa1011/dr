@@ -55,7 +55,7 @@ CObject2D *CObject2D::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth
 HRESULT CObject2D::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//頂点バッファの生成
@@ -155,7 +155,7 @@ void CObject2D::Update(void)
 void CObject2D::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 

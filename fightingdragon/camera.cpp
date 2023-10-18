@@ -259,7 +259,7 @@ void CCamera::Update(void)
 	//}
 
 		//デバッグ表示の情報を渡す
-		CDebugProc *pDebug = CManager::GetDebugProck();
+		CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 #ifdef _DEBUG
 		//カメラの位置をデバッグ表示
@@ -276,7 +276,7 @@ void CCamera::Update(void)
 void CCamera::SetCamera(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//プロジェクションマトリックスの初期化

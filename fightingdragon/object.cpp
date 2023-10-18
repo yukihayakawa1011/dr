@@ -88,7 +88,7 @@ void CObject::UpdateAll(void)
 	}*/
 	
 	//デバッグ表示の情報を渡す
-	CDebugProc *pDebug = CManager::GetDebugProck();
+	CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 #ifdef _DEBUG
 	pDebug->Print("オブジェクトの総数 : %d\n", m_nNumAll);

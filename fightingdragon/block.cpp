@@ -49,7 +49,7 @@ CBlock::~CBlock()
 HRESULT CBlock::Load(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//テクスチャの読み込み
@@ -99,7 +99,7 @@ CBlock *CBlock::Create(D3DXVECTOR3 pos, float fRot, int nTex,float fWidth, float
 HRESULT CBlock::Init(D3DXVECTOR3 pos, float fRot, int nTex,float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	CObjectx::Init(pos, fRot, nTex,fWidth,fHeight);

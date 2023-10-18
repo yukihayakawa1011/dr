@@ -39,7 +39,7 @@ HRESULT CLight::Init(void)
 	int nCnt;
 
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	for (nCnt = 0; nCnt < MAX_LIGHT; nCnt++)
@@ -105,7 +105,7 @@ void CLight::Uninit(void)
 void CLight::Update(void)
 {
 	//デバッグ表示の情報を渡す
-	CDebugProc *pDebug = CManager::GetDebugProck();
+	CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 #ifdef _DEBUG
 	pDebug->Print("\nライトの向き0 X : %f Y : %f Z : %f\n", m_VecDir[0].x, m_VecDir[0].y, m_VecDir[0].z);

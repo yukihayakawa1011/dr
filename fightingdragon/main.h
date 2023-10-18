@@ -12,6 +12,7 @@
 #include "d3dx9.h"
 #define DIRECTINPUT_VERSION  (0x0800)    //ビルド時の警告対処用マクロ
 #include "dinput.h"
+#include <assert.h>		//アサート処理
 
 //ライブラリのリンク
 #pragma comment(lib,"d3d9.lib")     //描画処理に必要

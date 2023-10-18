@@ -51,7 +51,7 @@ CBg *CBg::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CBg::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	if (nTex == 0)
@@ -181,7 +181,7 @@ void CBg::Update(void)
 void CBg::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 

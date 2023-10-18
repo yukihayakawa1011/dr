@@ -46,7 +46,7 @@ CNumber *CNumber::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CNumber::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//テクスチャの読み込み
@@ -160,7 +160,7 @@ void CNumber::Update(void)
 void CNumber::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 

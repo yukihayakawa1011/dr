@@ -43,7 +43,7 @@ CScore::~CScore()
 HRESULT CScore::Load(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//テクスチャの読み込み
@@ -158,7 +158,7 @@ void CScore::Uninit(void)
 void  CScore::Update(void)
 {
 	//デバッグ表示の情報を渡す
-	CDebugProc *pDebug = CManager::GetDebugProck();
+	CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 	SetPos(D3DXVECTOR3(1000.0f, 50.0f, 0.0f), 50.0f, 50.0f);
 

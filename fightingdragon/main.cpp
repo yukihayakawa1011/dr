@@ -82,10 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 
 	if (pManager == NULL)
 	{
-		pManager = NEW_DBG CManager;
-
-		//マネージャーの初期化
-		pManager->Init(hInstance, hWnd, TRUE);
+		CManager::GetInstance()->Init(hInstance, hWnd, TRUE);
 	}
 
 	//分解能を設定
@@ -140,15 +137,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 				dwExecLastTime = dwCurrentTime;  //処理開始の時刻[現在時刻]を保存
 
 			//マネージャーの更新
-				pManager->Update();
+				CManager::GetInstance()->Update();
 
 				//マネージャーの描画
-				pManager->Draw();
+				CManager::GetInstance()->Draw();
 
 				dwFrameCount++;         //フレームカウントを加算
 
 				//デバッグ表示の情報を渡す
-				CDebugProc *pDebug = CManager::GetDebugProck();
+				CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 #ifdef _DEBUG
 				pDebug->Print("FPS : %d\n",nCountFPS);
@@ -156,16 +153,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR lpCmdLine
 			}
 		}
 	}
-
-	//マネージャーの破棄
-	if (pManager != NULL)
-	{
-		pManager->Uninit();
-
-		delete pManager;
-
-		pManager = NULL;
-	}
+	
+	CManager::Release();
 	
 	//ウインドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, wcex.hInstance);

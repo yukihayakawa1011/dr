@@ -32,13 +32,7 @@
 #include "mode.h"
 
 //静的メンバ変数
-CRenderer *CManager::m_pRenderer = NULL;				//レンダラーを初期化
-CInputKeyboard *CManager::m_pInputKeyboard = NULL;		//キーボード情報を初期化
-CDebugProc *CManager::m_pDebugProc = NULL;				//デバッグ情報を初期化
-CSound *CManager::m_pSound = NULL;						//サウンド情報を初期化
-CScene *CManager::m_pScene = NULL;						//シーン情報を初期化
-CScene *CScene::m_pScene = NULL;						//シーン情報を初期化
-CInputGamePad *CManager::m_pInputGamePad = NULL;		//ゲームパッド情報を初期化
+CManager *CManager::pManager = NULL;
 
 //============================
 //コンストラクタ
@@ -66,43 +60,40 @@ CScene::~CScene()
 //============================
 CScene *CScene::Create(MODE mode)
 {
+	CScene *pScene = NULL;
+
 	switch (mode)
 	{
 	case CScene::MODE_TITLE:
-		m_pScene = CTitle::Create(D3DXVECTOR3(640.0f,360.0f,0.0f),0.0f,0);
+		pScene = CTitle::Create(D3DXVECTOR3(640.0f,360.0f,0.0f),0.0f,0);
 		break;
 
 	case CScene::MODE_STORY:
-		m_pScene = CStory::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
+		pScene = CStory::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
 		break;
 
 	case CScene::MODE_TUTORIAL:
-		m_pScene = CTutorial::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
+		pScene = CTutorial::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
 		break;
 
 	case CScene::MODE_GAME:
-		m_pScene = CGame::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0);
+		pScene = CGame::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), 0.0f, 0);
 
 		break;
 
 	case CScene::MODE_RESULT:
-		m_pScene = CResult::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
+		pScene = CResult::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
 		break;
 
 	case CScene::MODE_GAMEOVER:
-		m_pScene = CGameOver::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
+		pScene = CGameOver::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
 		break;
 
 	case CScene::MODE_MAX:
 		break;
 	}
 	
-	if (m_pScene == NULL)
-	{
-		return NULL;
-	}
-
-	return m_pScene;
+	return pScene;
 }
 
 //============================
@@ -112,7 +103,7 @@ HRESULT CScene::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float 
 {
 	m_Mode = MODE_TITLE;
 
-	CManager::SetMode(m_Mode);
+	CManager::GetInstance()->SetMode(m_Mode);
 
 	return S_OK;
 }
@@ -466,7 +457,7 @@ CDebugProc *CManager::GetDebugProck(void)
 void CManager::SetMode(CScene::MODE mode)
 {
 	//サウンドの停止
-	m_pSound->StopSound();
+	CManager::GetInstance()->m_pSound->StopSound();
 
 	if (m_pScene != NULL)
 	{
@@ -484,6 +475,34 @@ void CManager::SetMode(CScene::MODE mode)
 CInputGamePad *CManager::GetGamePad(void)
 {
 	return m_pInputGamePad;
+}
+
+//============================
+//インスタンス情報取得
+//============================
+CManager *CManager::GetInstance(void)
+{
+	if (pManager == NULL)
+	{
+		return pManager = new CManager;
+	}
+	else
+	{
+		return pManager;
+	}
+}
+
+//============================
+//インスタンス情報取得
+//============================
+void CManager::Release(void)
+{
+	if (pManager != NULL)
+	{
+		pManager->Uninit();
+		delete pManager;
+		pManager = NULL;
+	}
 }
 
 

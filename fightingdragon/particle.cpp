@@ -71,7 +71,7 @@ void *CParticle::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 HRESULT CParticle::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	CBilboard::Init(pos, fRot, nTex, fWidth,fHeight);

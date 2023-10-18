@@ -62,7 +62,7 @@ CModel *CModel::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, floa
 HRESULT CModel::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight, int nType)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	DWORD dwSizeFVF;  //頂点フォーマットのサイズ
@@ -503,7 +503,7 @@ void CModel::Update(void)
 void CModel::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//全モデル[パーツ]の描画
@@ -575,7 +575,7 @@ void CModel::Draw(void)
 void CModel::DrawCol(D3DXCOLOR col)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//全モデル[パーツ]の描画

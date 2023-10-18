@@ -43,7 +43,7 @@ CExplosion::~CExplosion()
 HRESULT CExplosion::Load(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//テクスチャの読み込み
@@ -93,7 +93,7 @@ CExplosion *CExplosion::Create(D3DXVECTOR3 pos, float fRot, int nTex)
 HRESULT CExplosion::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	CBilboard::Init(pos, fRot, nTex,50.0f,50.0f);

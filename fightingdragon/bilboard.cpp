@@ -93,7 +93,7 @@ CBilboard *CBilboard::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth
 HRESULT CBilboard::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//種類を設定
@@ -173,7 +173,7 @@ void CBilboard::Uninit(void)
 void CBilboard::Update(void)
 {
 	//デバッグ表示の情報を渡す
-	CDebugProc *pDebug = CManager::GetDebugProck();
+	CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 	//int nCnt = CBullet::GetNumAllBullet();
 
@@ -187,7 +187,7 @@ void CBilboard::Update(void)
 void CBilboard::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//計算用マトリックス

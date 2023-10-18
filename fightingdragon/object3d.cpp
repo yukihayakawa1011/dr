@@ -48,7 +48,7 @@ CObject3d::~CObject3d()
 HRESULT CObject3d::Load(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	return S_OK;
@@ -87,7 +87,7 @@ CObject3d *CObject3d::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth
 HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	if (nTex == 0)
@@ -184,7 +184,7 @@ void CObject3d::Uninit(void)
 void CObject3d::Update(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	VERTEX_3D *pVtx; //頂点座標へのポインタ
@@ -246,7 +246,7 @@ void CObject3d::Update(void)
 void CObject3d::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス

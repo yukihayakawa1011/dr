@@ -88,7 +88,7 @@ CEffect *CEffect::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, fl
 HRESULT CEffect::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight, D3DXVECTOR3 move, D3DXCOLOR col, int nLife)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	if (nTex == 0)
@@ -232,7 +232,7 @@ void CEffect::Update(void)
 void CEffect::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	//αブレンディングを加算合成に設定

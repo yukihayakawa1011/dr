@@ -55,7 +55,7 @@ CPlayer::CPlayer()
 	m_nNumModel = 0;						//モーションの総数
 
 	nPunchSpeed = 0;						//パンチ間隔
-
+	m_nEnemy = 0;
 	/*for (int nCnt = 0; nCnt < MOTIONTYPE_MAX; nCnt++)
 	{
 		m_aInfo[nCnt].nNumKey = 0;
@@ -69,6 +69,8 @@ CPlayer::CPlayer()
 	memset(&m_aInfo[0], NULL, sizeof(m_aInfo));
 
 	m_nFrameCnt = 0;
+
+	m_bSpawn = false;
 
 	/*プレイヤー通常変数のクリア
 	m_NoneMat.MatD3D.Ambient = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
@@ -150,7 +152,7 @@ CPlayer *CPlayer::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, fl
 HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	/*m_nldxShadow = SetShadow();
@@ -167,7 +169,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 
 	nPunchSpeed = PLAYER_PUNCH_SPEED;
 
-	m_nKey = 0;								//キーの数
+	m_nKey = 5;								//キーの数
 
 	m_nFrameCnt = 0;
 
@@ -195,13 +197,15 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 
 	m_bAttack = false;				//攻撃状態かどうかを初期化
 
+	m_bSpawn = false;
+
 	for (int nCntInfo = 0; nCntInfo < MAX_PART; nCntInfo++)
 	{
 		m_aInfo[nCntInfo].nNumKey = 0;
 
-		for (int nCnt = 0; nCnt < 4; nCnt++)
+		for (int nCnt = 0; nCnt < 5; nCnt++)
 		{
-			m_aInfo[nCntInfo].aKeyinfo[nCnt].nFrame = 60;
+			m_aInfo[nCntInfo].aKeyinfo[nCnt].nFrame = 120;
 		}
 	}
 
@@ -368,6 +372,10 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float
 	////頂点バッファをアンロックする
 	//m_pVtxBuff->Unlock();
 
+	CEnemy *pEnemy = CGame::GetEnemy();
+
+	m_nEnemy = pEnemy->GetCnt();
+
 	SetPosition(pos);
 
 	SetRot(D3DXVECTOR3(0.0f,fRot,0.0f));
@@ -421,7 +429,7 @@ void CPlayer::Update(void)
 		////m_fHeight = CObject3d::get
 
 		//デバッグ表示の情報を渡す
-		CDebugProc *pDebug = CManager::GetDebugProck();
+		CDebugProc *pDebug = CManager::GetInstance()->GetDebugProck();
 
 		D3DXVECTOR3 pos = GetPosition();
 
@@ -438,9 +446,9 @@ void CPlayer::Update(void)
 		pScore = CGame::GetScore();
 
 		//キーボードの取得
-		pInputKeyboard = CManager::GetInputKeyboard();
+		pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-		pInputGamepad = CManager::GetGamePad();
+		pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 		D3DXVECTOR3 move = GetMove();
 
@@ -449,6 +457,18 @@ void CPlayer::Update(void)
 
 		////モーションの更新
 		//m_pMotion->Update();
+
+		CEnemy *pEnemy = CGame::GetEnemy();
+
+		////敵をスポーンさせる処理
+		//if (pos.x < -250.0f && m_bSpawn == false)
+		//{
+		//	/*pEnemy->Create(D3DXVECTOR3(-300.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0f);
+
+		//	pEnemy->SetDeath(false, m_nEnemy);
+
+		//	m_bSpawn = true;*/
+		//}
 
 		int nState = 0;
 		m_PlayerState = GetState();
@@ -484,7 +504,7 @@ void CPlayer::Update(void)
 					}
 
 					//プレイヤーのパンチをしたかどうか
-					else if (pInputKeyboard->GetTrigger(DIK_P) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+					else if (pInputKeyboard->GetTrigger(DIK_U) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
 					{
 						/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
 						{
@@ -497,12 +517,26 @@ void CPlayer::Update(void)
 
 							m_bAttack = true;
 						}
-
-						/*if (nPunchSpeed <= 0)
+							/*if (nPunchSpeed <= 0)
+							{
+								nPunchSpeed = PLAYER_PUNCH_SPEED;
+							}*/
+							/*}*/
+						}
+					//プレイヤーのパンチをしたかどうか
+					else if (pInputKeyboard->GetTrigger(DIK_J) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_B, 0) == true)
+					{
+						/*for (int nCnt = 0; nCnt <= PLAYER_PUNCH_SPEED; nCnt++)
 						{
-							nPunchSpeed = PLAYER_PUNCH_SPEED;
-						}*/
-						/*}*/
+						nPunchSpeed--;*/
+
+						if (m_nType != MOTIONTYPE_PUNCH0)
+						{
+							HitEnemyKick0(m_bDeath);
+							SetMotionPlayer(MOTIONTYPE_PUNCH0);
+
+							m_bAttack = true;
+						}
 					}
 					else
 					{
@@ -510,7 +544,7 @@ void CPlayer::Update(void)
 					}
 				}
 
-				else if (m_bAttack == false)
+				else if (m_bAttack == false && move.x <= 0.0f)
 				{
 					if (m_nType != MOTIONTYPE_NEUTRAL)
 					{
@@ -519,7 +553,7 @@ void CPlayer::Update(void)
 				}
 		
 			//ガード処理
-			if (pInputKeyboard->GetPless(DIK_G) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_X, 0) == true)
+			if (pInputKeyboard->GetPless(DIK_H) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_X, 0) == true)
 			{
 				m_PlayerState = PLAYER_GURD;
 			}
@@ -2797,7 +2831,7 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -1.2f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.9f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 			//ふたつ目のパーツ(体)
@@ -2805,8 +2839,8 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.4f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 			//みっつ目のパーツ(頭)
@@ -2815,7 +2849,7 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.6f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 			//よっつ目のパーツ(左肩)
@@ -2825,7 +2859,7 @@ case MOTIONTYPE_MOVE:
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 1.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.3f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.5f;
 
 			//いつつ目のパーツ(左腕)
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
@@ -2849,15 +2883,15 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.7f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 1.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.6f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.4f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.7f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = -0.2f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -2909,23 +2943,23 @@ case MOTIONTYPE_MOVE:
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = -0.3f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.2f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.2f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = -0.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -0.8f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosY = 0.0f;
@@ -2943,7 +2977,7 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotX = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -1.2f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotY = -0.9f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[0].m_fRotZ = 0.0f;
 
 			//ふたつ目のパーツ(体)
@@ -2951,8 +2985,8 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotX = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotY = 0.4f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[1].m_fRotZ = 0.0f;
 
 			//みっつ目のパーツ(頭)
@@ -2961,7 +2995,7 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.6f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotY = 0.4f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[2].m_fRotZ = 0.0f;
 
 			//よっつ目のパーツ(左肩)
@@ -2971,7 +3005,7 @@ case MOTIONTYPE_MOVE:
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotX = 1.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotY = -0.7f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.3f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[3].m_fRotZ = 0.5f;
 
 			//いつつ目のパーツ(左腕)
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[4].m_fPosX = 0.0f;
@@ -2995,15 +3029,15 @@ case MOTIONTYPE_MOVE:
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 0.7f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.3f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotX = 1.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotY = 0.6f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[6].m_fRotZ = -0.2f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.4f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotX = -0.7f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotY = -0.2f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[7].m_fRotZ = 0.0f;
 
@@ -3055,23 +3089,23 @@ case MOTIONTYPE_MOVE:
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotY = -0.3f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[13].m_fRotZ = 0.9f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fPosZ = 0.0f;
 
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = -0.3f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotY = -0.2f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.0f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[14].m_fRotZ = 0.2f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosY = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fPosZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotX = 0.0f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -0.1f;
-			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = -0.1f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotY = -0.8f;
+			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[15].m_fRotZ = 0.0f;
 
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosX = 0.0f;
 			m_aInfo[m_nType].aKeyinfo[nNextKey].aKey[16].m_fPosY = 0.0f;
@@ -3147,7 +3181,7 @@ case MOTIONTYPE_MOVE:
 void CPlayer::Draw(void)
 {
 	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetRenderer();
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	D3DXVECTOR3 pos = GetPosition();
@@ -3412,9 +3446,9 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
@@ -3441,48 +3475,144 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 
 				pObjectx = dynamic_cast<CObjectx*>(pObj);
 
-				if (GetPosition().x + 12.0f >= pObjectx->GetPosition().x - 15.0f
-					&& GetPosition().x - 12.0f <= pObjectx->GetPosition().x + 15.0f
-					&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
-					&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
-					&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
-					&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
+				CEnemy *pEnemy = CGame::GetEnemy();
+
+				bool bDeath = pEnemy->GetDeath();
+
+				if (bDeath == false)
 				{
-					CEnemy *pEnemy = CGame::GetEnemy();
-
-					//パーティクルの生成
-					CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
-
-					/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-					CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
-
-					int nEnemyLife = pEnemy->GetLife(0);
-
-					if (nEnemyLife <= 0)
+					if (GetPosition().x + 12.0f >= pObjectx->GetPosition().x - 15.0f
+						&& GetPosition().x - 12.0f <= pObjectx->GetPosition().x + 15.0f
+						&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
+						&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
+						&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
+						&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
 					{
-						//死んだことにする
-						bDeath = true;
 
-						
+						//パーティクルの生成
+						CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						pEnemy->SetDeath(bDeath,0);
+						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
 
-						return true;
-					}
-					else
-					{
-						pEnemy->AddDamage(1, 0);
+						int nEnemyLife = pEnemy->GetLife(m_nEnemy);
 
-						D3DXVECTOR3 move = GetMove();
+						if (nEnemyLife < 0)
+						{
+							//死んだことにする
+							bDeath = true;
 
-						/*move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
+							pEnemy->SetDeath(bDeath, m_nEnemy);
 
-						SetMove(move);*/
+							pObjectx->Uninit();
+
+							return true;
+						}
+						else
+						{
+							pEnemy->AddDamage(1, m_nEnemy);
+
+							D3DXVECTOR3 move = GetMove();
+
+							/*move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
+
+							SetMove(move);*/
+						}
 					}
 				}
 			}
 		}
 	}
+	return false;
+}
+
+//==============================
+//敵の当たり判定(3D)
+//==============================
+bool CPlayer::HitEnemyKick0(bool bDeath)
+{
+	CInputKeyboard *pInputKeyboard;
+	CInputGamePad *pInputGamepad;
+
+	//キーボードの取得
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
+
+	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
+	{
+		CObject *pObj = NULL;
+
+		CObjectx *pObjectx = NULL;
+
+		//オブジェクトを取得
+		pObj = GetObject(nCnt);
+
+		//NULLチェック
+		if (pObj != NULL)
+		{
+			TYPE type;
+
+			//種類を取得
+			type = pObj->GetType();
+
+			////位置取得
+			//D3DXVECTOR3 posBlock = pObj->GetPosition();
+
+			if (type == TYPE_ENEMY)
+			{
+
+				pObjectx = dynamic_cast<CObjectx*>(pObj);
+
+				CEnemy *pEnemy = CGame::GetEnemy();
+
+				bool bDeath = pEnemy->GetDeath();
+
+				if (bDeath == false)
+				{
+
+					if (GetPosition().x + 12.0f >= pObjectx->GetPosition().x - 15.0f
+						&& GetPosition().x - 20.0f <= pObjectx->GetPosition().x + 20.0f
+						&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
+						&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
+						&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
+						&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
+					{
+						//パーティクルの生成
+						CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
+
+						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
+
+						int nEnemyLife = pEnemy->GetLife(0);
+
+						if (nEnemyLife < 0)
+						{
+							//死んだことにする
+							bDeath = true;
+
+							pEnemy->SetDeath(bDeath, m_nEnemy);
+
+							pObjectx->Uninit();
+
+							return true;
+						}
+						else
+						{
+							pEnemy->AddDamage(1, m_nEnemy);
+
+							D3DXVECTOR3 move = GetMove();
+
+							/*move = D3DXVECTOR3(20.0f, 10.0f, 0.0f);
+
+							SetMove(move);*/
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return false;
 }
 
@@ -3495,9 +3625,9 @@ bool CPlayer::HitPlayer(bool bDeath)
 	CInputGamePad *pInputGamepad;
 
 	//キーボードの取得
-	pInputKeyboard = CManager::GetInputKeyboard();
+	pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
-	pInputGamepad = CManager::GetGamePad();
+	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
 	for (int nCnt = 0; nCnt < MAX_OBJECT; nCnt++)
 	{
@@ -3524,20 +3654,26 @@ bool CPlayer::HitPlayer(bool bDeath)
 
 				pObjectx = dynamic_cast<CObjectx*>(pObj);
 
-				if (GetPosition().x + 10.0f >= pObjectx->GetPosition().x - 0.0f
-					&& GetPosition().x - 10.0f <= pObjectx->GetPosition().x + 0.0f
-					&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
-					&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
-					&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
-					&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
+				CEnemy *pEnemy = CGame::GetEnemy();
+
+				bool bDeath = pEnemy->GetDeath();
+
+				if (bDeath == false)
 				{
+					if (GetPosition().x + 10.0f >= pObjectx->GetPosition().x - 0.0f
+						&& GetPosition().x - 10.0f <= pObjectx->GetPosition().x + 0.0f
+						&& GetPosition().y + 10.0f >= pObjectx->GetPosition().y - 20.0f
+						&& GetPosition().y - 10.0f <= pObjectx->GetPosition().y + 40.0f
+						&& GetPosition().z + 5.0f >= pObjectx->GetPosition().z - 5.0f
+						&& GetPosition().z - 5.0f <= pObjectx->GetPosition().z + 5.0f)
+					{
 						//パーティクルの生成
 						CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
 						CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
 						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
 
-						if (m_nLife <= 0)
+						if (m_nLife < 0)
 						{
 							//死んだことにする
 							bDeath = true;
@@ -3561,6 +3697,7 @@ bool CPlayer::HitPlayer(bool bDeath)
 								SetMotionPlayer(MOTIONTYPE_NEUTRAL);
 							}
 						}
+					}
 				}
 			}
 		}
