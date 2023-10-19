@@ -59,6 +59,7 @@ public:
 		MOTIONTYPE_NEUTRAL = 0, //待機
 		MOTIONTYPE_MOVE,		//移動
 		MOTIONTYPE_PUNCH0,		//パンチ
+		MOTIONTYPE_KICK0,		//キック
 		MOTIONTYPE_JUMP,		//ジャンプ
 		MOTIONTYPE_LANDING,		//着地
 		MOTIONTYPE_MAX,
@@ -114,6 +115,10 @@ public:
 	void HitBlock(bool bJump);
 	bool HitEnemyPunch0(bool bDeath);
 	bool HitEnemyKick0(bool bDeath);
+	bool HitEnemyUnfarePunch(bool bDeath);
+	bool HitEnemyUnfareKick(bool bDeath);
+
+
 	bool HitPlayer(bool bDeath);
 
 	void SetDeath(bool bDeath);
@@ -196,6 +201,8 @@ private:
 	int m_nEnemy;					//何番めの敵か知る
 
 	bool m_bSpawn;					//スポーンしたかどうか
+
+	bool m_bUnfare;					//unfair攻撃を使おうとしてるか
 };
 
 #endif

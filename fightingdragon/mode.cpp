@@ -801,7 +801,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 	if (m_pEnemy == NULL)
 	{//ìGÇÃê∂ê¨
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
 	}
 	else
 	{
