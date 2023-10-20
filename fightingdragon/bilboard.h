@@ -10,7 +10,7 @@
 #include "main.h"
 #include "object3d.h"
 
-#define MAX_TEX (3)		//最大テクスチャ数
+//#define MAX_TEX (3)		//最大テクスチャ数
 
 class CBilboard : public CObject
 {

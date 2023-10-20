@@ -60,7 +60,7 @@ public:
 		MOTIONTYPE_MOVE,		//移動
 		MOTIONTYPE_PUNCH0,		//パンチ
 		MOTIONTYPE_KICK0,		//キック
-		MOTIONTYPE_JUMP,		//ジャンプ
+		MOTIONTYPE_UNFAIR_PUNCH,		//unfairパンチ
 		MOTIONTYPE_LANDING,		//着地
 		MOTIONTYPE_MAX,
 	}MOTIONTYPE;
@@ -100,8 +100,7 @@ public:
 	CPlayer();
 	~CPlayer();
 
-	/*static HRESULT Load(void);
-	static void Unload(void);*/
+	
 	static CPlayer *Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight);
 	HRESULT Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight);
 

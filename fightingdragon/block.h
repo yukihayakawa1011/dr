@@ -27,8 +27,8 @@ public:
 	void Uninit(void);
 	void Update(void);
 	void Draw(void);
-	CBlock GetPos(void);
-	void SetPos(D3DXVECTOR3 pos);
+	/*CBlock GetPos(void);
+	void SetPos(D3DXVECTOR3 pos);*/
 
 	bool colision(D3DXVECTOR3 *pPos, D3DXVECTOR3 *pPosOld, D3DXVECTOR3 *pMove, float fWidth, float fHeight, bool bJump);
 

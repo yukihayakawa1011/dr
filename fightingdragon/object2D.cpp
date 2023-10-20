@@ -12,6 +12,7 @@
 
 //静的メンバ変数宣言
 CObject2D *CObject2D::m_apObject[320];
+LPDIRECT3DTEXTURE9 CObject2D::m_pTexture = NULL;
 
 //============================
 //コンストラクタ
@@ -34,6 +35,39 @@ CObject2D::~CObject2D()
 }
 
 //============================
+//テクスチャの生成(読み込み)
+//============================
+HRESULT CObject2D::Load(int nTex)
+{
+	//デバイスの取得
+	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
+	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+
+	if (nTex == 0)
+	{
+		//テクスチャの読み込み
+		D3DXCreateTextureFromFile(pDevice,
+			"Data\\TEXTURE\\tile.jpg",
+			&m_pTexture);
+	}
+
+	return S_OK;
+}
+
+//============================
+//テクスチャの破棄
+//============================
+void CObject2D::Unload(void)
+{
+	//テクスチャの破棄
+	if (m_pTexture != NULL)
+	{
+		m_pTexture->Release();
+		m_pTexture = NULL;
+	}
+}
+
+//============================
 //生成処理
 //============================
 CObject2D *CObject2D::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight)
@@ -45,6 +79,9 @@ CObject2D *CObject2D::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth
 
 	//初期化処理
 	pObject2D->Init(D3DXVECTOR3(pos.x,pos.y,pos.z),fRot,nTex,fWidth,fHeight);
+
+	//テクスチャの割り当て
+	pObject2D->BindTexture(m_pTexture);
 
 	return pObject2D;
 }
@@ -84,10 +121,10 @@ HRESULT CObject2D::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(pos.x - fWidth, pos.y - fHeight, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(pos.x + fWidth, pos.y - fHeight, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(pos.x - fWidth, pos.y + fHeight, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(pos.x + fWidth, pos.y + fHeight, 0.0f);
+	pVtx[0].pos = D3DXVECTOR3(pos.x - fWidth, pos.y + fHeight, pos.z);
+	pVtx[1].pos = D3DXVECTOR3(pos.x + fWidth, pos.y + fHeight, pos.z);
+	pVtx[2].pos = D3DXVECTOR3(pos.x - fWidth, pos.y - fHeight, pos.z);
+	pVtx[3].pos = D3DXVECTOR3(pos.x + fWidth, pos.y - fHeight, pos.z);
 
 	//rhw(法線)の設定
 	pVtx[0].rhw = 1.0f;
@@ -110,6 +147,8 @@ HRESULT CObject2D::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	//頂点バッファをアンロックする
 	m_pVtxBuff->Unlock();
 
+	SetPosition(pos);
+
 	return S_OK;
 }
 //============================
@@ -124,30 +163,30 @@ void CObject2D::Uninit(void)
 		m_pVtxBuff = NULL;
 	}
 
-	Release();
+	CObject::Release();
 }
 //============================
 //ポリゴンの更新
 //============================
 void CObject2D::Update(void)
 {
-	D3DXVECTOR3 pos = GetPosition();
+	//D3DXVECTOR3 pos = GetPosition();
 
-	VERTEX_2D *pVtx;    //頂点情報へのポインタ
+	//VERTEX_2D *pVtx;    //頂点情報へのポインタ
 
-	//頂点バッファをロックし、頂点情報へのポインタを取得
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	////頂点バッファをロックし、頂点情報へのポインタを取得
+	//m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(pos.x - m_pos.x, pos.y - m_pos.y, m_pos.z);
-	pVtx[1].pos = D3DXVECTOR3(pos.x + m_pos.x, pos.y - m_pos.y, m_pos.z);
-	pVtx[2].pos = D3DXVECTOR3(pos.x - m_pos.x, pos.y + m_pos.y, m_pos.z);
-	pVtx[3].pos = D3DXVECTOR3(pos.x + m_pos.x, pos.y + m_pos.y, m_pos.z);
+	////頂点座標の設定
+	//pVtx[0].pos = D3DXVECTOR3(pos.x - m_pos.x, pos.y + m_pos.y, m_pos.z);
+	//pVtx[1].pos = D3DXVECTOR3(pos.x + m_pos.x, pos.y + m_pos.y, m_pos.z);
+	//pVtx[2].pos = D3DXVECTOR3(pos.x - m_pos.x, pos.y - m_pos.y, m_pos.z);
+	//pVtx[3].pos = D3DXVECTOR3(pos.x + m_pos.x, pos.y - m_pos.y, m_pos.z);
 
-	//頂点バッファをアンロックする
-	m_pVtxBuff->Unlock();
+	////頂点バッファをアンロックする
+	//m_pVtxBuff->Unlock();
 
-	SetPosition(pos);
+	//SetPosition(pos);
 }
 //============================
 //ポリゴンの描画

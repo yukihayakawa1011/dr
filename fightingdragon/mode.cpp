@@ -44,7 +44,7 @@ CLight *CGame::m_pLight = NULL;						//ライト情報を初期化
 CObjectx *CGame::m_pObjectx[USE_OBJECTX] = {};		//オブジェクトX情報を初期化
 CModel *CGame::m_pModel = NULL;						//モデル情報を初期化
 CInfection *CGame::m_pInfection = NULL;				//感染情報情報を初期化
-CObject3d *CGame::m_pObject3d = NULL;				//感染情報情報を初期化
+CObject2D *CGame::m_pObject2D = NULL;				//感染情報情報を初期化
 CPause *CGame::m_pPause = NULL;				//感染情報情報を初期化
 
 //============================
@@ -715,7 +715,7 @@ CGame::CGame()
 
 	m_pLight = NULL;
 
-	m_pObject3d = NULL;
+	m_pObject2D = NULL;
 
 	m_pPause = NULL;
 
@@ -773,7 +773,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							//CPlayer::Load();		//プレイヤーテクスチャロード
 
-	CObject3d::Load();		//オブジェクト3dテクスチャロード
+	CObject2D::Load(0);		//オブジェクト3dテクスチャロード
 
 							//CBilboard::Load();		//ビルボードテクスチャロード
 
@@ -788,17 +788,17 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							/*InitShadow();*/
 
+	//if (m_pAbg == NULL)
+	//{
+	//	////オブジェクト3Dの生成
+	//	m_pAbg = CAbg::Create(D3DXVECTOR3(0.0f, 0.0f, 2000), 0.0f, 0, 3000.0f, 300.0);
+	//}
+	//else
+	//{
+	//	return -1;
+	//}
 
-	if (m_pObject3d == NULL)
-	{
-		////オブジェクト3Dの生成
-		m_pObject3d = CObject3d::Create(D3DXVECTOR3(-250.0f, 0.0f, 0.0f), 50.0f, 0, 50.0f, 50.0);
-	}
-	else
-	{
-		return -1;
-	}
-
+	
 	if (m_pEnemy == NULL)
 	{//敵の生成
 		m_pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
@@ -901,7 +901,7 @@ void CGame::Uninit(void)
 	CBlock::Unload();
 
 	//オブジェクト3dテクスチャ破棄
-	CObject3d::Unload();
+	CObject2D::Unload();
 
 	CScene::Uninit();
 
@@ -1509,9 +1509,9 @@ CInfection *CGame::GetInfection(void)
 //============================
 //オブジェクト3D情報の情報取得
 //============================
-CObject3d *CGame::GetObject3d(void)
+CObject2D *CGame::GetObject2D(void)
 {
-	return m_pObject3d;
+	return m_pObject2D;
 }
 
 

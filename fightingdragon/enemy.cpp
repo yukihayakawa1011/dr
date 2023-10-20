@@ -3612,7 +3612,7 @@ void CEnemy::Update(void)
 		break;
 
 	case MOTIONTYPE_MOVE:
-		if (m_nFrameCnt > 50)
+		if (m_nFrameCnt > 60)
 		{
 			m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 			m_nCounter = 0;
@@ -3622,7 +3622,7 @@ void CEnemy::Update(void)
 		break;
 
 	case MOTIONTYPE_PUNCH:
-		if (m_nFrameCnt > 20)
+		if (m_nFrameCnt > 60)
 		{
 			m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 			m_nCounter = 0;
@@ -3637,7 +3637,7 @@ void CEnemy::Update(void)
 		break;
 
 	case MOTIONTYPE_KICK:
-		if (m_nFrameCnt > 20)
+		if (m_nFrameCnt > 60)
 		{
 			m_nKey = (m_nKey + 1) % m_aInfo[m_nKey].nNumKey;
 			m_nCounter = 0;

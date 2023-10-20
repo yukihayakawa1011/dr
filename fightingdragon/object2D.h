@@ -16,6 +16,9 @@ public:
 	CObject2D();
 	~CObject2D();
 
+	static HRESULT Load(int nTex);
+	static void Unload(void);
+
 	static CObject2D *Create(D3DXVECTOR3 pos,float fRot,int nTex, float fWidth, float fHeight);
 	HRESULT Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, float fHeight);
 
@@ -41,7 +44,7 @@ public:
 
 
 protected:
-	LPDIRECT3DTEXTURE9 m_pTexture;				//テクスチャのポインタ
+	static LPDIRECT3DTEXTURE9 m_pTexture;				//テクスチャのポインタ
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;			//頂点バッファへのポインタ
 	D3DXVECTOR3 m_pos;							//位置情報
 	D3DXVECTOR3 m_move;							//移動量
