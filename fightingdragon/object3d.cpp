@@ -78,7 +78,7 @@ CObject3d *CObject3d::Create(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth
 	pObject3D = NEW_DBG CObject3d;
 
 	//初期化処理
-	pObject3D->Init(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f,0, fWidth, fHeight);
+	pObject3D->Init(D3DXVECTOR3(pos.x, pos.y, pos.z), 0.0f,nTex, fWidth, fHeight);
 
 	return pObject3D;
 }
@@ -94,7 +94,15 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	{
 		//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\black.jpg",
+			"data\\TEXTURE\\lostwarm.png",
+			&m_pTexture);
+	}
+
+	if (nTex == 1)
+	{
+		//テクスチャの読み込み
+		D3DXCreateTextureFromFile(pDevice,
+			"data\\TEXTURE\\wall.jpg",
 			&m_pTexture);
 	}
 
@@ -134,22 +142,43 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	D3DXVECTOR3 vec1 = D3DXVECTOR3(200, 0.0, + 100.0f) - D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 vec2 = D3DXVECTOR3(- 200, 0.0,+ 100.0f) - D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	D3DXVECTOR3 nor;
-	//float fheight;		//求める高さ
+	//D3DXVECTOR3 nor;
+	////float fheight;		//求める高さ
 
-	//ふたつのベクトルから法線を求める
-	D3DXVec3Cross(&nor,
-		&vec1,
-		&vec2);
+	////ふたつのベクトルから法線を求める
+	//D3DXVec3Cross(&nor,
+	//	&vec1,
+	//	&vec2);
 
-	//法線を正規化する
-	D3DXVec3Normalize(&nor, &nor);
+	////法線を正規化する
+	//D3DXVec3Normalize(&nor, &nor);
 
-	//法線ベクトルの設定
-	pVtx[0].nor = D3DXVECTOR3(nor.x, nor.y, nor.z);
-	pVtx[1].nor = D3DXVECTOR3(nor.x, nor.y, nor.z);
-	pVtx[2].nor = D3DXVECTOR3(nor.x, nor.y, nor.z);
-	pVtx[3].nor = D3DXVECTOR3(nor.x, nor.y, nor.z);
+	if (nTex == 0)
+	{
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
+	}
+
+	if (nTex == 1)
+	{
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+	}
+
+	if (nTex == 2)
+	{
+		//法線ベクトルの設定
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+	}
 
 	//頂点カラーの設定
 	pVtx[0].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
@@ -183,63 +212,63 @@ void CObject3d::Uninit(void)
 //ポリゴンの更新処理
 void CObject3d::Update(void)
 {
-	//デバイスの取得
-	CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
-	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+	////デバイスの取得
+	//CRenderer *pRenderer = CManager::GetInstance()->GetRenderer();
+	//LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
-	VERTEX_3D *pVtx; //頂点座標へのポインタ
+	//VERTEX_3D *pVtx; //頂点座標へのポインタ
 
-	//頂点バッファをロックし,頂点情報へのポインタを取得
-	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	////頂点バッファをロックし,頂点情報へのポインタを取得
+	//m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	//色を明け渡す
-	m_objectcol = GetColor();
+	////色を明け渡す
+	//m_objectcol = GetColor();
 
-	/*if (m_objectcol.a < 1.0f || m_objectcol.a > 0.0f)
-	{*/
-		
-			m_TimeBlinking--;
+	///*if (m_objectcol.a < 1.0f || m_objectcol.a > 0.0f)
+	//{*/
+	//	
+	//		m_TimeBlinking--;
 
-			/*m_bShowEnemy = false;
+	//		/*m_bShowEnemy = false;
 
-			SetShowEnemy(m_bShowEnemy);*/
+	//		SetShowEnemy(m_bShowEnemy);*/
 
-			//一定時間で発光する
-			if (m_TimeBlinking == 50)
-			{
-				//発光させる
-				m_objectcol.a = 1.1f;
+	//		//一定時間で発光する
+	//		if (m_TimeBlinking == 50)
+	//		{
+	//			//発光させる
+	//			m_objectcol.a = 1.1f;
 
-				CSound::PlaySound(CSound::SOUND_LABEL_SE_THUNDER);
-			}
+	//			CSound::PlaySound(CSound::SOUND_LABEL_SE_THUNDER);
+	//		}
 
-			if (m_TimeBlinking < 0)
-			{//時間がたったらリセット
-				m_TimeBlinking = 600;
-			}
-			else if (m_TimeBlinking <= 50)
-			{//光ってからリセットまでの間
+	//		if (m_TimeBlinking < 0)
+	//		{//時間がたったらリセット
+	//			m_TimeBlinking = 600;
+	//		}
+	//		else if (m_TimeBlinking <= 50)
+	//		{//光ってからリセットまでの間
 
-				//徐々に薄くする
-				m_objectcol.a -= 0.02f;
+	//			//徐々に薄くする
+	//			m_objectcol.a -= 0.02f;
 
-			/*	m_bShowEnemy = true;
+	//		/*	m_bShowEnemy = true;
 
-				SetShowEnemy(m_bShowEnemy);*/
-			}
-			else
-			{//それ以外は見えなくする
-				m_objectcol.a = 0.0f;
-			}
-		
-		//頂点カラーの設定
-		pVtx[0].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
-		pVtx[1].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
-		pVtx[2].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
-		pVtx[3].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
+	//			SetShowEnemy(m_bShowEnemy);*/
+	//		}
+	//		else
+	//		{//それ以外は見えなくする
+	//			m_objectcol.a = 0.0f;
+	//		}
+	//	
+	//	//頂点カラーの設定
+	//	pVtx[0].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
+	//	pVtx[1].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
+	//	pVtx[2].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
+	//	pVtx[3].col = D3DXCOLOR(m_objectcol.r, m_objectcol.g, m_objectcol.b, m_objectcol.a);
 
-		SetColor(m_objectcol);
-	/*}*/
+	//	SetColor(m_objectcol);
+	///*}*/
 }
 
 //ポリゴンの描画処理

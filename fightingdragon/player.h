@@ -56,12 +56,13 @@ public:
 	//モーションの種類
 	typedef enum
 	{
-		MOTIONTYPE_NEUTRAL = 0, //待機
-		MOTIONTYPE_MOVE,		//移動
-		MOTIONTYPE_PUNCH0,		//パンチ
-		MOTIONTYPE_KICK0,		//キック
-		MOTIONTYPE_UNFAIR_PUNCH,		//unfairパンチ
-		MOTIONTYPE_LANDING,		//着地
+		MOTIONTYPE_NEUTRAL = 0,		//待機
+		MOTIONTYPE_MOVE,			//移動
+		MOTIONTYPE_PUNCH0,			//パンチ
+		MOTIONTYPE_KICK0,			//キック
+		MOTIONTYPE_UNFAIR_PUNCH,	//unfairパンチ
+		MOTIONTYPE_UNFAIR_KICK,		//unfairキック
+		MOTIONTYPE_DAMAGE,			//ダメージ
 		MOTIONTYPE_MAX,
 	}MOTIONTYPE;
 
@@ -202,6 +203,8 @@ private:
 	bool m_bSpawn;					//スポーンしたかどうか
 
 	bool m_bUnfare;					//unfair攻撃を使おうとしてるか
+
+	int m_nKill;					//何人倒したか
 };
 
 #endif

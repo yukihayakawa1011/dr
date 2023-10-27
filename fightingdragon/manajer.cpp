@@ -65,7 +65,7 @@ CScene *CScene::Create(MODE mode)
 	switch (mode)
 	{
 	case CScene::MODE_TITLE:
-		pScene = CTitle::Create(D3DXVECTOR3(640.0f,360.0f,0.0f),0.0f,0);
+		pScene = CTitle::Create(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, 0);
 		break;
 
 	case CScene::MODE_STORY:

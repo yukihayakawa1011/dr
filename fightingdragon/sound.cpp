@@ -17,7 +17,7 @@ DWORD CSound::m_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイズ
 																	// サウンドの情報
 CSound::SOUNDINFO m_aSoundInfo[CSound::SOUND_LABEL_MAX] =
 {
-	{ "data/BGM/encount.wav", -1 },			//タイトルBGM
+	{ "data/BGM/Loop_TAZ_02_Loop.wav", -1 },			//タイトルBGM
 	{ "data/SE/damage.wav", 0 },			//ダメージボイス
 	{ "data/SE/damage.wav", -1 },			//ダメージボイス
 	{ "data/SE/timeup.wav", 0 },			//窓ガラス割れる

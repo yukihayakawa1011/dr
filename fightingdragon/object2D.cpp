@@ -47,7 +47,7 @@ HRESULT CObject2D::Load(int nTex)
 	{
 		//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"Data\\TEXTURE\\tile.jpg",
+			"Data\\TEXTURE\\Fd_titleenter.png",
 			&m_pTexture);
 	}
 

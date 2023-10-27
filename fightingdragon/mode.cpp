@@ -44,7 +44,8 @@ CLight *CGame::m_pLight = NULL;						//ライト情報を初期化
 CObjectx *CGame::m_pObjectx[USE_OBJECTX] = {};		//オブジェクトX情報を初期化
 CModel *CGame::m_pModel = NULL;						//モデル情報を初期化
 CInfection *CGame::m_pInfection = NULL;				//感染情報情報を初期化
-CObject2D *CGame::m_pObject2D = NULL;				//感染情報情報を初期化
+CObject3d *CGame::m_pObject3dfloar = NULL;				//感染情報情報を初期化
+CObject3d *CGame::m_pObject3dwall = NULL;				//感染情報情報を初期化
 CPause *CGame::m_pPause = NULL;				//感染情報情報を初期化
 
 //============================
@@ -91,10 +92,12 @@ HRESULT CTitle::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 	fRot = 0.0f;
 
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
+
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\infection_title.png",
+			"data\\TEXTURE\\Fd_title.png",
 			&m_pTexture);
 	}
 
@@ -128,11 +131,16 @@ HRESULT CTitle::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 						//頂点バッファをロックし、頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
+	if (nTex == 0)
+	{//テクスチャの読み込み
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(pos.x - 640.0f, pos.y - 360.0f, 0.0f);
-	pVtx[1].pos = D3DXVECTOR3(pos.x + 640.0f, pos.y - 360.0f, 0.0f);
-	pVtx[2].pos = D3DXVECTOR3(pos.x - 640.0f, pos.y + 360.0f, 0.0f);
-	pVtx[3].pos = D3DXVECTOR3(pos.x + 640.0f, pos.y + 360.0f, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(pos.x - 640.0f, pos.y - 360.0f, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(pos.x + 640.0f, pos.y - 360.0f, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(pos.x - 640.0f, pos.y + 360.0f, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(pos.x + 640.0f, pos.y + 360.0f, 0.0f);
+	}
+
+	
 
 
 	////角度を決める
@@ -204,6 +212,8 @@ void CTitle::Uninit(void)
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -310,10 +320,12 @@ HRESULT CStory::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 	fRot = 0.0f;
 
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
+
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\story.png",
+			"data\\TEXTURE\\Fd_story.png",
 			&m_pTexture);
 	}
 
@@ -423,6 +435,8 @@ void CStory::Uninit(void)
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -525,10 +539,12 @@ HRESULT CTutorial::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 	fRot = 0.0f;
 
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
+
 	if (nTex == 0)
 	{//テクスチャの読み込み
 		D3DXCreateTextureFromFile(pDevice,
-			"data\\TEXTURE\\tutorial0.png",
+			"data\\TEXTURE\\Fd_tutorial.png",
 			&m_pTexture);
 	}
 
@@ -638,6 +654,8 @@ void CTutorial::Uninit(void)
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -715,7 +733,8 @@ CGame::CGame()
 
 	m_pLight = NULL;
 
-	m_pObject2D = NULL;
+	m_pObject3dfloar = NULL;
+	m_pObject3dwall = NULL;
 
 	m_pPause = NULL;
 
@@ -755,6 +774,8 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 	fRot = 0.0f;
 
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
+
 	m_bPause = false;
 
 	pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -773,7 +794,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							//CPlayer::Load();		//プレイヤーテクスチャロード
 
-	CObject2D::Load(0);		//オブジェクト3dテクスチャロード
+	CObject3d::Load();		//オブジェクト3dテクスチャロード
 
 							//CBilboard::Load();		//ビルボードテクスチャロード
 
@@ -788,20 +809,29 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							/*InitShadow();*/
 
-	//if (m_pAbg == NULL)
-	//{
-	//	////オブジェクト3Dの生成
-	//	m_pAbg = CAbg::Create(D3DXVECTOR3(0.0f, 0.0f, 2000), 0.0f, 0, 3000.0f, 300.0);
-	//}
-	//else
-	//{
-	//	return -1;
-	//}
+	if (m_pObject3dwall == NULL)
+	{
+		////オブジェクト3Dの生成
+		m_pObject3dwall = CObject3d::Create(D3DXVECTOR3(0.0f,0.0f, 300.0f), 0.0f, 0, 3000.0f, 2000.0f);
+	}
+	else
+	{
+		return -1;
+	}
 
+	if (m_pObject3dfloar == NULL)
+	{
+		////オブジェクト3Dの生成
+		m_pObject3dfloar = CObject3d::Create(D3DXVECTOR3(0.0f, -100.0f, 300.0f), 0.0f, 1, 3000.0f, 0.0f);
+	}
+	else
+	{
+		return -1;
+	}
 	
 	if (m_pEnemy == NULL)
 	{//敵の生成
-		m_pEnemy = CEnemy::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
+		m_pEnemy = CEnemy::Create(D3DXVECTOR3(2600.0f, 0.0f, 0.0f), D3DX_PI * -0.5f, 0, 50.0f, 50.0f);
 	}
 	else
 	{
@@ -813,7 +843,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (m_pPlayer == NULL)
 	{
 		//プレイヤーの生成
-		m_pPlayer = CPlayer::Create(D3DXVECTOR3(300.0f, 2.0f, -10.0f), D3DX_PI * 0.5f, 1, 20.0f, 20.0f);
+		m_pPlayer = CPlayer::Create(D3DXVECTOR3(2900.0f, 2.0f, -10.0f), D3DX_PI * 0.5f, 1, 20.0f, 20.0f);
 	}
 	else
 	{
@@ -901,11 +931,13 @@ void CGame::Uninit(void)
 	CBlock::Unload();
 
 	//オブジェクト3dテクスチャ破棄
-	CObject2D::Unload();
+	CObject3d::Unload();
 
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -948,7 +980,7 @@ void CGame::Update(void)
 
 		D3DXVECTOR3 pos = m_pPlayer->GetPosition();
 
-		if (pos.x <= -300.0f)
+		if (pos.x <= -2800.0f)
 		{
 			CManager::GetInstance()->SetMode(MODE_RESULT);
 		}
@@ -959,13 +991,6 @@ void CGame::Update(void)
 		{
 			CManager::GetInstance()->SetMode(MODE_GAMEOVER);
 		}
-	}
-
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
-	{
-		CManager::GetInstance()->SetMode(MODE_RESULT);
-
-		CSound::PlaySound(CSound::SOUND_LABEL_SE_TUTORIALENTER);
 	}
 }
 
@@ -1024,6 +1049,8 @@ HRESULT CResult::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
+
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	if (nTex == 0)
 	{//テクスチャの読み込み
@@ -1138,6 +1165,8 @@ void CResult::Uninit(void)
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -1228,6 +1257,8 @@ HRESULT CGameOver::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
 	fRot = 0.0f;
+
+	CSound::PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	if (nTex == 0)
 	{//テクスチャの読み込み
@@ -1346,6 +1377,8 @@ void CGameOver::Uninit(void)
 	CScene::Uninit();
 
 	ReleaseAll();
+
+	CSound::StopSound();
 }
 
 //===========================
@@ -1509,9 +1542,9 @@ CInfection *CGame::GetInfection(void)
 //============================
 //オブジェクト3D情報の情報取得
 //============================
-CObject2D *CGame::GetObject2D(void)
+CObject3d *CGame::GetObject3d(void)
 {
-	return m_pObject2D;
+	return m_pObject3dfloar;
 }
 
 

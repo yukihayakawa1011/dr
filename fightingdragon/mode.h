@@ -13,7 +13,7 @@ class CParticle;
 class CPlayer;
 class CExplosion;
 class CEffect;
-//class CAbg;
+class CObject3d;
 class CScore;
 //class CTime;
 class CEnemy;
@@ -43,7 +43,6 @@ protected:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;			//頂点バッファへのポインタ
 
 private:
-	
 
 };
 
@@ -117,7 +116,7 @@ public:
 	static CObjectx *GetObjectx(void);
 	static CModel *GetModel(void);
 	static CInfection *GetInfection(void);
-	static CObject2D *GetObject2D(void);
+	static CObject3d *GetObject3d(void);
 
 private:
 	static CPlayer *m_pPlayer;					//プレイヤーの情報
@@ -134,7 +133,8 @@ private:
 	static CObjectx *m_pObjectx[USE_OBJECTX];	//オブジェクト情報
 	static CModel *m_pModel;					//モデル情報
 	static CInfection *m_pInfection;			//感染情報
-	static CObject2D *m_pObject2D;				//オブジェクト3d情報
+	static CObject3d *m_pObject3dfloar;				//オブジェクト3d情報
+	static CObject3d *m_pObject3dwall;				//オブジェクト3d情報
 	static CPause *m_pPause;					//ポーズの情報
 	bool m_bPause;								//ポーズ状態のON/OFF
 };
