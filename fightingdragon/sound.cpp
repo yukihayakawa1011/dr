@@ -19,16 +19,18 @@ CSound::SOUNDINFO m_aSoundInfo[CSound::SOUND_LABEL_MAX] =
 {
 	{ "data/BGM/Loop_TAZ_02_Loop.wav", -1 },			//タイトルBGM
 	{ "data/SE/damage.wav", 0 },			//ダメージボイス
-	{ "data/SE/damage.wav", -1 },			//ダメージボイス
-	{ "data/SE/timeup.wav", 0 },			//窓ガラス割れる
-	{ "data/SE/warai4.wav", 0 },			//笑い声
-	{ "data/SE/horror_himei2.wav", 0 },		//入ってくる音
-	{ "data/SE/se_gun_fire.wav",0 },		//銃声
-	{"data/SE/eatn.wav",0},					//銃声
-	{ "data/SE/Thunder.wav",0 },				//雷
 	{ "data/SE/enter.wav",0 },				//雷
 	{"data/SE/enter1.wav",0},				//雷
-	{"data/SE/gameover.wav",0},			//叫び
+	{ "data/SE/gameover.wav",0 },			//ゲームオーバーボイス
+	{ "data/SE/ballhit.wav",0 },			//金的ヒットボイス
+	{ "data/SE/kinteki.wav",0 },			//金的ヒット
+	{ "data/SE/eyehit.wav",0 },			//目つぶしヒット
+	{ "data/SE/ta_ta_butya01.wav",0 },			//目つぶしでつぶれた音
+	{ "data/SE/hit.wav",0 },			//倒した音
+	{ "data/SE/punch.wav",0 },			//パンチ音
+	{ "data/SE/kick.wav",0 },			//キック音
+	{ "data/SE/unfair.wav",0 },			//unfair攻撃音
+	{"data/SE/attack.wav",0},			//攻撃音
 
 };
 

@@ -6000,9 +6000,6 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 						//パーティクルの生成
 						//CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
-
 						int nEnemyLife = pEnemy->GetLife(m_nEnemy);
 
 						if (nEnemyLife < 0)
@@ -6027,6 +6024,8 @@ bool CPlayer::HitEnemyPunch0(bool bDeath)
 								m_bSpawn = false;
 
 								m_nKill++;
+
+								CSound::PlaySound(CSound::SOUND_LABEL_SE_KILL);
 
 								return true;
 							//}
@@ -6104,9 +6103,6 @@ bool CPlayer::HitEnemyKick0(bool bDeath)
 						//パーティクルの生成
 						//CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
-
 						int nEnemyLife = pEnemy->GetLife(0);
 
 						if (nEnemyLife < 0)
@@ -6131,6 +6127,8 @@ bool CPlayer::HitEnemyKick0(bool bDeath)
 								m_bSpawn = false;
 
 								m_nKill++;
+
+								CSound::PlaySound(CSound::SOUND_LABEL_SE_KILL);
 
 								return true;
 							//}
@@ -6211,8 +6209,8 @@ bool CPlayer::HitEnemyUnfarePunch(bool bDeath)
 						//パーティクルの生成
 						//CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_EYEHIT);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_EYEHITVOICE);
 
 						int nEnemyLife = pEnemy->GetLife(0);
 
@@ -6238,6 +6236,8 @@ bool CPlayer::HitEnemyUnfarePunch(bool bDeath)
 							m_bSpawn = false;
 
 							m_nKill++;
+
+							CSound::PlaySound(CSound::SOUND_LABEL_SE_KILL);
 
 							return true;
 							/*}*/
@@ -6316,8 +6316,8 @@ bool CPlayer::HitEnemyUnfareKick(bool bDeath)
 						//パーティクルの生成
 						//CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);*/
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_BALLHIT);
+						CSound::PlaySound(CSound::SOUND_LABEL_SE_BALLHITVOICE);
 
 						int nEnemyLife = pEnemy->GetLife(0);
 
@@ -6340,6 +6340,8 @@ bool CPlayer::HitEnemyUnfareKick(bool bDeath)
 							m_bSpawn = false;
 
 							m_nKill++;
+
+							CSound::PlaySound(CSound::SOUND_LABEL_SE_KILL);
 
 							return true;
 
@@ -6418,7 +6420,7 @@ bool CPlayer::HitPlayer(bool bDeath)
 						//パーティクルの生成
 						//CParticle::Create(D3DXVECTOR3(GetPosition().x, GetPosition().y + 20.0f, GetPosition().z), GetRot().y, 1, 10.0f, 10.0f);
 
-						CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);
+						/*CSound::PlaySound(CSound::SOUND_LABEL_SE_BLOOD);*/
 						CSound::PlaySound(CSound::SOUND_LABEL_SE_DAMAGE);
 
 						if (m_nLife <= 1)
