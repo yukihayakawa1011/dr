@@ -71,7 +71,7 @@ HRESULT CObjectx::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, floa
 	if (nTex == 0)
 	{
 		//XÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-		D3DXLoadMeshFromX("data\\MODEL\\block.x",
+		D3DXLoadMeshFromX("data\\MODEL\\wall.x",
 			D3DXMESH_SYSTEMMEM,
 			pDevice,
 			NULL,

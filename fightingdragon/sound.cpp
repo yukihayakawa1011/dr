@@ -30,7 +30,8 @@ CSound::SOUNDINFO m_aSoundInfo[CSound::SOUND_LABEL_MAX] =
 	{ "data/SE/punch.wav",0 },			//ƒpƒ“ƒ`‰¹
 	{ "data/SE/kick.wav",0 },			//ƒLƒbƒN‰¹
 	{ "data/SE/unfair.wav",0 },			//unfairUŒ‚‰¹
-	{"data/SE/attack.wav",0},			//UŒ‚‰¹
+	{ "data/SE/attack.wav",0 },			//UŒ‚‰¹
+	{"data/SE/nc105501.wav",0},			//UŒ‚‰¹
 
 };
 

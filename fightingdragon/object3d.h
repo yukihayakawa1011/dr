@@ -13,6 +13,13 @@
 class CObject3d : public CObject
 {
 public:
+	typedef enum 
+	{
+		TYPE_FLOAR = 0,
+		TYPE_WALL,
+		TYPE_MAX,
+	}OBJECTTYPE;
+
 	CObject3d();
 	~CObject3d();
 
@@ -50,6 +57,8 @@ private:
 	bool m_bShowEnemy;		//“G‚ðˆÚ‚·‚©‚Ç‚¤‚©
 
 	static CObject3d *m_pObject[320];
+
+	OBJECTTYPE m_type;
 };
 
 

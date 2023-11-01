@@ -41,6 +41,7 @@ public:
 		SOUND_LABEL_SE_KICK,  //キック音
 		SOUND_LABEL_SE_UNFAIR,  //unfair攻撃音
 		SOUND_LABEL_SE_ATTACKVOICE,  //攻撃ボイス
+		SOUND_LABEL_SE_EYEVOICE,  //攻撃ボイス
 		SOUND_LABEL_MAX
 	} SOUND_LABEL;
 

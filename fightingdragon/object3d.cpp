@@ -31,6 +31,8 @@ CObject3d::CObject3d()
 
 	m_TimeBlinking = 0;
 
+	m_type = TYPE_FLOAR;
+
 	//m_bShowEnemy = true;
 }
 
@@ -113,6 +115,16 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	m_rot.y = fRot; //向きを初期化
 	m_rot.z = fRot; //向きを初期化
 
+	if (nTex == 0)
+	{
+		m_type = TYPE_WALL;
+	}
+
+	if (nTex == 1)
+	{
+		m_type = TYPE_FLOAR;
+	}
+
 	/*m_bShowEnemy = true;*/
 
 	m_objectcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
@@ -153,16 +165,16 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 	////法線を正規化する
 	//D3DXVec3Normalize(&nor, &nor);
 
-	if (nTex == 0)
+	if (m_type == TYPE_WALL)
 	{
 		//法線ベクトルの設定
-		pVtx[0].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
-		pVtx[1].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
-		pVtx[2].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
-		pVtx[3].nor = D3DXVECTOR3(0.0f,0.0f, -1.0f);
+		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 	}
 
-	if (nTex == 1)
+	else if (m_type == TYPE_FLOAR)
 	{
 		//法線ベクトルの設定
 		pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -171,7 +183,7 @@ HRESULT CObject3d::Init(D3DXVECTOR3 pos, float fRot, int nTex, float fWidth, flo
 		pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	}
 
-	if (nTex == 2)
+	else if (nTex == 2)
 	{
 		//法線ベクトルの設定
 		pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);

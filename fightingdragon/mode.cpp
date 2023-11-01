@@ -232,7 +232,7 @@ void CTitle::Update(void)
 
 	
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
 		
 		CManager::GetInstance()->SetMode(MODE_STORY);
@@ -453,7 +453,7 @@ void CStory::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
 		CManager::GetInstance()->SetMode(MODE_TUTORIAL);
 
@@ -672,7 +672,7 @@ void CTutorial::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
 		CManager::GetInstance()->SetMode(MODE_GAME);
 
@@ -809,10 +809,22 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 
 							/*InitShadow();*/
 
+							//NULLチェック
+	if (m_pBlock == NULL)
+	{
+		//ゴールブロックの生成
+		m_pBlock = CBlock::Create(D3DXVECTOR3(0.0f, 0.0f, 100.0f), 0.0f, 0, 50.0f, 50.0f);
+		m_pBlock = CBlock::Create(D3DXVECTOR3(-2800.0f, 0.0f, 20.0f), 0.0f, 3, 50.0f, 50.0f);
+	}
+	else
+	{
+		return -1;
+	}
+
 	if (m_pObject3dwall == NULL)
 	{
 		////オブジェクト3Dの生成
-		m_pObject3dwall = CObject3d::Create(D3DXVECTOR3(0.0f,0.0f, 300.0f), 0.0f, 0, 3000.0f, 2000.0f);
+		m_pObject3dwall = CObject3d::Create(D3DXVECTOR3(0.0f,-50.0f, 300.0f), 0.0f, 0, 4000.0f, 2000.0f);
 	}
 	else
 	{
@@ -822,7 +834,7 @@ HRESULT CGame::Init(D3DXVECTOR3 pos, float fRot, int nTex)
 	if (m_pObject3dfloar == NULL)
 	{
 		////オブジェクト3Dの生成
-		m_pObject3dfloar = CObject3d::Create(D3DXVECTOR3(0.0f, -100.0f, 300.0f), 0.0f, 1, 3000.0f, 0.0f);
+		m_pObject3dfloar = CObject3d::Create(D3DXVECTOR3(0.0f, -50.0f, 300.0f), 0.0f, 1, 3000.0f, 0.0f);
 	}
 	else
 	{
@@ -973,10 +985,10 @@ void CGame::Update(void)
 
 		m_pLight->Update();
 
-		CInputKeyboard *pInputKeyboard;
+		//CInputKeyboard *pInputKeyboard;
 
-		//キーボードの取得
-		pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
+		////キーボードの取得
+		//pInputKeyboard = CManager::GetInstance()->GetInputKeyboard();
 
 		D3DXVECTOR3 pos = m_pPlayer->GetPosition();
 
@@ -1183,7 +1195,7 @@ void CResult::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
 		CManager::GetInstance()->SetMode(MODE_TITLE);
 
@@ -1396,7 +1408,7 @@ void CGameOver::Update(void)
 	//ゲームパッドの取得
 	pInputGamepad = CManager::GetInstance()->GetGamePad();
 
-	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_A, 0) == true)
+	if (pInputKeyboard->GetTrigger(DIK_RETURN) == true || pInputGamepad->GetTrigger(pInputGamepad->BUTTON_START, 0) == true)
 	{
 		CManager::GetInstance()->SetMode(MODE_TITLE);
 	}

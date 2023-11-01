@@ -422,6 +422,19 @@ void CEnemy::Update(void)
 		}
 	}
 
+	//•Ç‚Ì“–‚½‚è”»’è
+	if (pos.x + 50.0f > 3000.0f)
+	{
+		pos.x = 3000.0f - 50.0f;
+		move.x = 0;
+	}
+
+	else if (pos.x - 50.0f < -3000.0f)
+	{
+		pos.x = -3000.0f + 50.0f;
+		move.x = 0;
+	}
+
 	//
 	//{//“G‚ÌˆÊ’u(Z)‚ª0ˆÈŠO‚¾‚Á‚½‚ç
 	//	if (m_pPlayer->GetPosition().x - 100.0f <= pos.x + 200.0f

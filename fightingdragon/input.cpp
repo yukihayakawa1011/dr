@@ -199,7 +199,7 @@ bool CInputKeyboard::GetRelease(int nKey)
 //ゲームパッドのコンストラクタ
 CInputGamePad::CInputGamePad()
 {
-		for (int nCnt = 0; nCnt < 256; nCnt++)
+		for (int nCnt = 0; nCnt < MAX_PLAYER; nCnt++)
 		{
 			ZeroMemory(&m_aGamepadState[nCnt], sizeof(XINPUT_STATE)); //パッドのプレス情報
 			ZeroMemory(&m_aGamepadState[nCnt], sizeof(XINPUT_STATE)); //パッドのトリガー情報

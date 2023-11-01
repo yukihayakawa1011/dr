@@ -63,6 +63,7 @@ public:
 		MOTIONTYPE_UNFAIR_PUNCH,	//unfairパンチ
 		MOTIONTYPE_UNFAIR_KICK,		//unfairキック
 		MOTIONTYPE_DAMAGE,			//ダメージ
+		MOTIONTYPE_GURD,			//ガード
 		MOTIONTYPE_MAX,
 	}MOTIONTYPE;
 
